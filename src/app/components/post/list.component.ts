@@ -8,7 +8,7 @@ import { PostService } from 'src/app/services/post.service';
   <div class="container">
     <div>
       <h2>My latest posts</h2>
-      <small *ngIf="loading">Heroku container is sleppy 😴, wait here, the posts are coming!</small>
+      <small *ngIf="loading">Under Maintence ⛑️</small>
       <main>
         <ul class="posts">
           <li *ngFor="let post of posts">
