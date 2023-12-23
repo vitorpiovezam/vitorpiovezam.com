@@ -1,4 +1,4 @@
-# VitorJs
+# vitorpiovezam.com
 
 My personal blog, where I publish tech and music articles.
 Hosted at http://vitorpiovezam.com.s3-website.us-east-2.amazonaws.com
