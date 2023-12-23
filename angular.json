@@ -143,7 +143,6 @@
       }
     }
   },
-  "defaultProject": "vitor-js",
   "cli": {
     "analytics": "ab154e29-4312-4cb5-988d-a70cab62d913"
   }
