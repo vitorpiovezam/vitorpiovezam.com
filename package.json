@@ -25,7 +25,7 @@
     "@fortawesome/angular-fontawesome": "^0.10.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
-    "ngx-markdown": "^11.2.0",
+    "ngx-markdown": "^13.1.0",
     "ngx-webstorage-service": "^4.1.0",
     "rupture-sass": "^0.3.0",
     "rxjs": "~6.5.4",
