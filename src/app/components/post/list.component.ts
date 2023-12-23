@@ -16,7 +16,7 @@ import { PostService } from 'src/app/services/post.service';
               <div class="card">
                 <h3>{{ post.title }}</h3>
                 <p>{{ post.textPreview }}</p>
-                <span class="chip">{{ post.postDate | date: 'mediumDate'  }}</span>
+                <span class="chip">{{ post.postDate | date: 'mediumDate' }}</span>
                 <span class="chip">{{ post.type }}</span>
               </div>
             </a>
@@ -56,11 +56,6 @@ import { PostService } from 'src/app/services/post.service';
       color: black;
       background: aquamarine;
       margin-right: 5px;
-
-      &:hover {
-        cursor: pointer;
-        display: block;
-      }
     }
     `
   ]
