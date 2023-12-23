@@ -31,8 +31,7 @@ import { LoadingComponent } from './components/shared/loading.component';
       { path: 'post/:slug', component: PostViewComponent },
     ],
     {
-    scrollPositionRestoration: 'enabled',
-    relativeLinkResolution: 'legacy'
+    scrollPositionRestoration: 'enabled'
 }),
     MarkdownModule.forRoot({
       sanitize: SecurityContext.NONE
