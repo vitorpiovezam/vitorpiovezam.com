@@ -126,18 +126,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "vitor-js:build"
+            "buildTarget": "vitor-js:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "vitor-js:build:production"
+              "buildTarget": "vitor-js:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "vitor-js:build"
+            "buildTarget": "vitor-js:build"
           }
         }
       }
