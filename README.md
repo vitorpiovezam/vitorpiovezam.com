@@ -13,6 +13,6 @@ Hosted at http://vitorpiovezam.com.s3-website.us-east-2.amazonaws.com.
 
 This blog is feeded by an Serverless V3 api wich is in this [repo](https://github.com/vitorpiovezam/blog-cms-v2).
 
-## The Emd
+## The End
 <img src="https://3.bp.blogspot.com/-3o66FY0sxww/V1K73uQaskI/AAAAAAAAQZI/KkegqDYpz7QkZzBCW9oetqNgEW-klFrHgCLcB/s1600/folks.jpg" width="300px">
 
