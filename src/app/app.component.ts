@@ -23,9 +23,6 @@ import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
                 <a title="Strava" href="https://www.strava.com/athletes/35866145" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#FC4C02" d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg></a>
                 <a title="Flickr" href="https://www.flickr.com/people/seu_usuario" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="6.5" cy="12" r="4.5" fill="#0063dc"/><circle cx="17.5" cy="12" r="4.5" fill="#ff0084"/></svg></a>
               </p>
-
-              <p>
-              </p>
             </div>
           </app-about>
         </div>
