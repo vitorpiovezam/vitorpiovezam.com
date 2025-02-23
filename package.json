@@ -6,7 +6,7 @@
     "start:dev": "ng serve --configuration=dev",
     "start": "ng serve",
     "build": "ng build",
-    "deploy": "aws s3 sync ./dist/vitor-js s3://vitorpiovezam.com",
+    "deploy": "aws s3 sync ./dist/vitor-js/browser s3://vitorpiovezam.com",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
