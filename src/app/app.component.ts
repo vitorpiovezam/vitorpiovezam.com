@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-root',
-  template: `
+    selector: 'app-root',
+    template: `
       <div [ngClass]="{'container': true, 'dark-theme': darkTheme, 'light-theme': !darkTheme}">
         <div class="about">
           <app-about>
@@ -36,7 +36,8 @@ import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
         </div>
     </div>
   `,
-  styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent {
   title = 'vitor-js';

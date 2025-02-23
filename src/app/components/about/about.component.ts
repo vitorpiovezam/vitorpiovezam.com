@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-about',
-  template: `
+    selector: 'app-about',
+    template: `
   <div class="profile">
     <h2>About</h2>
     <div class="text">
@@ -18,7 +18,8 @@ import { Component, OnInit } from '@angular/core';
     </div>
   </div>
   `,
-  styleUrls: [`./about.component.scss`]
+    styleUrls: [`./about.component.scss`],
+    standalone: false
 })
 export class AboutComponent implements OnInit {
   myAge: number;

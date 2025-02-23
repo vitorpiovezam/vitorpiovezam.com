@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-loading',
-  template: '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>',
-  styles: [
-    `
+    selector: 'app-loading',
+    template: '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>',
+    styles: [
+        `
     .lds-ring {
       display: inline-block;
       position: relative;
@@ -48,7 +48,8 @@ import { Component } from '@angular/core';
       }
     }
     `
-  ],
+    ],
+    standalone: false
 })
 export class LoadingComponent {
 }

@@ -5,8 +5,8 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { PostService } from 'src/app/services/post.service';
 
 @Component({
-  selector: 'app-post-view',
-  template: `
+    selector: 'app-post-view',
+    template: `
     <app-loading *ngIf="loading"></app-loading>
     <article class="post" *ngIf="!loading && post">
       <h2>{{ post?.title }} <fa-icon [icon]="close" (click)="closePost()"></fa-icon></h2>
@@ -17,8 +17,8 @@ import { PostService } from 'src/app/services/post.service';
       <span class="scroller"> <</span>
     </a>
   `,
-  styles: [
-    `
+    styles: [
+        `
     article.post {
       width: 100%;
       line-height: 1.8rem;
@@ -50,7 +50,8 @@ import { PostService } from 'src/app/services/post.service';
       transform: rotate(90deg);
     }
     `
-  ]
+    ],
+    standalone: false
 })
 export class PostViewComponent implements OnInit {
   post: Post;

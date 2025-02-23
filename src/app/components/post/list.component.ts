@@ -3,8 +3,8 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { PostService } from 'src/app/services/post.service';
 
 @Component({
-  selector: 'app-post-list',
-  template: `
+    selector: 'app-post-list',
+    template: `
   <div class="container">
     <div>
       <h2>My latest posts</h2>
@@ -26,7 +26,7 @@ import { PostService } from 'src/app/services/post.service';
     </div>
   </div>
   `,
-  styles: [`
+    styles: [`
 
 
     @media (min-width: 850px) {
@@ -58,7 +58,8 @@ import { PostService } from 'src/app/services/post.service';
       margin-right: 5px;
     }
     `
-  ]
+    ],
+    standalone: false
 })
 export class PostListComponent implements OnInit {
   posts: Post[];
