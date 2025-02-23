@@ -14,7 +14,8 @@ import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { PostListComponent } from './components/post/list.component';
 import { PostViewComponent } from './components/post/view.component';
 import { LoadingComponent } from './components/shared/loading.component';
-@NgModule({ declarations: [
+@NgModule({ 
+    declarations: [
         AppComponent,
         AboutComponent,
         PostListComponent,
@@ -24,20 +25,23 @@ import { LoadingComponent } from './components/shared/loading.component';
     exports: [
         RouterModule
     ],
-    bootstrap: [AppComponent], imports: [FontAwesomeModule,
+    bootstrap: [AppComponent],
+    imports: [
+        FontAwesomeModule,
         BrowserModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         RouterModule.forRoot([
             { path: 'post/:slug', component: PostViewComponent },
-        ], {
-            scrollPositionRestoration: 'enabled'
-        }),
+        ], { scrollPositionRestoration: 'enabled' }),
         MarkdownModule.forRoot({
             sanitize: SecurityContext.NONE
-        })], providers: [
+        })
+    ],
+    providers: [
         LocalStorageService,
         MarkdownService,
         PostService,
         provideHttpClient(withInterceptorsFromDi()),
-    ] })
+    ]
+})
 export class AppModule { }
