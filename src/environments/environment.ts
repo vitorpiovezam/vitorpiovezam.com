@@ -4,8 +4,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://2d7fi9s1v1.execute-api.us-east-1.amazonaws.com/dev'
+  apiUrl: 'https://12moo2o2w4.execute-api.us-east-1.amazonaws.com/dev'
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file
