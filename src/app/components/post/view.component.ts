@@ -27,6 +27,8 @@ import { PostService } from 'src/app/services/post.service';
 
       ::ng-deep pre,code {
         overflow: auto !important;
+        color: black;
+        background: #b5e9dc;
       }
 
       fa-icon{
@@ -36,7 +38,7 @@ import { PostService } from 'src/app/services/post.service';
           cursor: pointer;
         }
       }
-    }
+    } 
 
     fa-icon {
       float: right;

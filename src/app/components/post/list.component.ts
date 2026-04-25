@@ -17,7 +17,7 @@ import { PostService } from 'src/app/services/post.service';
                 <h3>{{ post.title }}</h3>
                 <p>{{ post.textPreview }}</p>
                 <span class="chip">{{ post.postDate | date: 'mediumDate' }}</span>
-                <span class="chip">{{ post.type }}</span>
+                <span class="chip">{{ post.type.trim().toLowerCase() }}</span>
               </div>
             </a>
           </li>
