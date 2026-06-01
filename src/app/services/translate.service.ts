@@ -22,10 +22,13 @@ export class TranslateService {
     const key = `${from}|${to}|${text}`;
     if (this.cache.has(key)) return of(this.cache.get(key)!);
 
-    return this.http.get<any>(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`
-    ).pipe(
-      map(res => res.responseData?.translatedText || text),
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
+    return this.http.get<any>(url).pipe(
+      map(res => {
+        // Response: [[[translatedText, originalText, ...], ...], ...]
+        const parts: string[] = (res[0] as any[]).map((chunk: any[]) => chunk[0] || '');
+        return parts.join('') || text;
+      }),
       tap(translated => this.cache.set(key, translated)),
       catchError(() => of(text))
     );
