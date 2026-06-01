@@ -235,14 +235,89 @@
   }
 
   ::ng-deep {
-    h1, h2, h3, h4, h5, h6 { font-family: $font-headline; font-weight: 700; margin: 2rem 0 0.8rem; }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: $font-headline;
+      font-weight: 700;
+      line-height: 1.2;
+      display: block;
+      clear: both;
+      margin: 2.4rem 0 0.9rem;
+    }
+    h1 { font-size: 1.9rem; }
+    h2 { font-size: 1.45rem; border-bottom: 1px solid $rule; padding-bottom: 0.3rem; }
+    h3 { font-size: 1.15rem; }
+
     p { margin: 0 0 1.2rem; }
-    img { display: block; margin: 2rem auto; border-radius: 4px; max-width: 100%; }
-    blockquote { margin: 1.5rem 0; padding-left: 20px; border-left: 3px solid $accent; color: $ink-light; font-style: italic; }
-    pre, code { color: $ink; background: #f4f4f4; }
-    pre { border: 1px solid $rule; border-radius: 4px; padding: 1rem; overflow-x: auto; }
+
+    // Images: less bottom margin so caption stays close
+    img {
+      display: block;
+      margin: 2rem auto 0.4rem;
+      border-radius: 4px;
+      max-width: 100%;
+    }
+
+    // Captions inside <p align> wrapping images
+    small {
+      display: block;
+      text-align: center;
+      font-size: 0.78rem;
+      color: $ink-faint;
+      font-style: italic;
+      margin: 0 auto 2rem;
+      line-height: 1.4;
+    }
+
+    // p wrapping image+caption: no extra bottom margin (small handles it)
+    p:has(img), p[align] {
+      margin-bottom: 0;
+      text-align: center;
+    }
+
+    blockquote {
+      margin: 1.5rem 0;
+      padding-left: 20px;
+      border-left: 3px solid $accent;
+      color: $ink-light;
+      font-style: italic;
+    }
+
+    // Code blocks
+    pre {
+      border: 1px solid $rule;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      line-height: 1.6;
+      font-size: 0.88rem;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      border-radius: 0;
+      font-size: inherit;
+    }
+    code {
+      background: #f4f4f4;
+      color: $ink;
+      padding: 0.15em 0.45em;
+      border-radius: 4px;
+      font-size: 0.88em;
+      word-break: break-word;
+    }
+
+    // iframes: block with breathing room
+    iframe {
+      display: block;
+      margin: 2rem auto;
+      max-width: 100%;
+      border-radius: 6px;
+    }
+
     a { color: $accent; text-decoration: underline; text-underline-offset: 2px; }
     ul, ol { padding-left: 24px; margin: 0 0 1.2rem; }
+    li { margin-bottom: 0.4rem; }
   }
 }
 
