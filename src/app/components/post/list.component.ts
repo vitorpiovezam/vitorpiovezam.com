@@ -168,20 +168,10 @@ export class PostListComponent implements OnInit, OnChanges {
 
     this.hero = this.displayPosts[0];
     this.subHero = total > 1 ? this.displayPosts[1] : null;
-
-    if (total <= 3) {
-      this.gridLayout = 'a';
-      this.sidePosts = this.displayPosts.slice(2, 4);
-      this.bottomPosts = [];
-    } else if (total <= 5) {
-      this.gridLayout = 'b';
-      this.sidePosts = this.displayPosts.slice(2, 4);
-      this.bottomPosts = this.displayPosts.slice(4);
-    } else {
-      this.gridLayout = 'c';
-      this.sidePosts = this.displayPosts.slice(2, 5);
-      this.bottomPosts = this.displayPosts.slice(5);
-    }
+    // Side always gets exactly 2 posts (with images they'd be too tall with 3)
+    this.sidePosts = this.displayPosts.slice(2, 4);
+    this.bottomPosts = this.displayPosts.slice(4);
+    this.gridLayout = total <= 2 ? 'a' : total <= 4 ? 'b' : 'c';
   }
 
   private translatePosts() {
