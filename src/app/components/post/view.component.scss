@@ -219,6 +219,95 @@
   font-size: 1.1rem;
   line-height: 1.8;
   color: $ink;
+
+  ::ng-deep {
+    h1, h2, h3, h4, h5, h6 {
+      font-family: $font-headline;
+      font-weight: 700;
+      line-height: 1.2;
+      display: block;
+      clear: both;
+      margin: 2.4rem 0 0.9rem;
+    }
+    h1 { font-size: 1.9rem; }
+    h2 { font-size: 1.45rem; border-bottom: 1px solid $rule; padding-bottom: 0.3rem; }
+    h3 { font-size: 1.15rem; }
+
+    p { margin: 0 0 1.2rem; }
+
+    img {
+      display: block;
+      margin: 2rem auto 0.4rem;
+      border-radius: 4px;
+      max-width: 100%;
+    }
+
+    small {
+      display: block;
+      text-align: center;
+      font-size: 0.78rem;
+      color: $ink-faint;
+      font-style: italic;
+      margin: 0 auto 2rem;
+      line-height: 1.4;
+    }
+
+    p:has(img), p[align] {
+      margin-bottom: 0;
+      text-align: center;
+    }
+
+    blockquote {
+      margin: 1.5rem 0;
+      padding-left: 20px;
+      border-left: 3px solid $accent;
+      color: $ink-light;
+      font-style: italic;
+    }
+
+    pre {
+      border: 1px solid $rule;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      line-height: 1.6;
+      font-size: 0.88rem;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      border-radius: 0;
+      font-size: inherit;
+    }
+    code {
+      background: #f4f4f4;
+      color: $ink;
+      padding: 0.15em 0.45em;
+      border-radius: 4px;
+      font-size: 0.88em;
+      word-break: break-word;
+    }
+
+    iframe {
+      display: block;
+      margin: 2rem auto;
+      max-width: 100%;
+      border-radius: 6px;
+    }
+
+    a { color: $accent; text-decoration: underline; text-underline-offset: 2px; }
+    ul, ol { padding-left: 24px; margin: 0 0 1.2rem; }
+    li { margin-bottom: 0.4rem; }
+
+    .speech-active {
+      background: #ffe033;
+      color: #111;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      border-radius: 2px;
+    }
+  }
 }
 
 // ── Article footer ────────────────────────────────────────────────────────────
@@ -632,7 +721,17 @@
   .comment-action { color: $dark-ink-faint; &:hover { color: $dark-ink; } }
   .no-comments { color: $dark-ink-faint; }
 
-  .article-body { color: $dark-ink; }
+  .article-body {
+    color: $dark-ink;
+    ::ng-deep {
+      h2 { border-color: $dark-rule; }
+      blockquote { color: $dark-ink-light; border-color: $dark-accent; }
+      pre { border-color: $dark-rule; background: $dark-paper-warm; }
+      pre code { background: none; }
+      code { background: $dark-paper-warm; color: $dark-ink; }
+      a { color: $dark-accent; }
+    }
+  }
   .read-comments-btn { background: #444; &:hover { background: $dark-ink; color: $dark-paper; } }
   .footer-action-pill { border-color: $dark-rule; color: $dark-ink; &:hover { border-color: $dark-ink; } &.bookmarked { color: $dark-accent; border-color: $dark-accent; } }
   .footer-rule { background: $dark-rule; }
