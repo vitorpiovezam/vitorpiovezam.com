@@ -740,6 +740,22 @@
 
 @media (max-width: $screen-sm) {
   .listen-label { display: none; }
-  .toolbar-btn { padding: 0 10px; }
+
+  // Normalize listen button size on mobile to match icon buttons
+  .toolbar-btn.listen-btn {
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    border: 1px solid $rule;
+    border-radius: 50%;
+    justify-content: center;
+  }
+
+  .listen-play-icon {
+    border: none;
+    width: auto;
+    height: auto;
+  }
+
   .comments-panel { width: 100%; }
 }

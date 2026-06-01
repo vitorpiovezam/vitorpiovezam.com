@@ -476,7 +476,8 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private prepareSpeechBlocks() {
-    const body = document.querySelector('.article-body');
+    // Try both scoped and global selectors to handle mobile rendering contexts
+    const body = document.querySelector('.modal .article-body') || document.querySelector('.article-body');
     if (!body) return;
     this.clearSpeechHighlight();
     const blocks = Array.from(body.querySelectorAll('p, li, h1, h2, h3, h4, blockquote')) as HTMLElement[];

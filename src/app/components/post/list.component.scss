@@ -375,27 +375,32 @@
   .grid-side      { order: 3; }
   .grid-bottom    { order: 4; }
 
-  // Hero image: full width, no padding
+  // Hero image: same size as other post images
   .grid-hero-img {
     padding: 0;
     border-bottom: none;
 
     img {
       width: 100%;
-      height: 200px;
-      border-radius: 0;
+      height: 160px;
+      border-radius: 2px;
       object-fit: cover;
     }
 
     &:not(.has-img) { display: none; }
   }
 
-  // Hero text block
+  // Hero text block — border below separates it from sub-hero
   .grid-hero-text {
     border-right: none;
     padding-right: 0;
-    padding: 14px 0 20px;
+    padding: 14px 0 0;
     border-bottom: 1px solid $rule;
+
+    // Keep sub-hero inside hero-text visually separated
+    .sub-hero {
+      padding: 14px 0 20px;
+    }
   }
 
   // Sub-hero rule hidden — border-bottom on hero-text handles separation

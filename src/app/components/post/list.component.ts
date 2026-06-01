@@ -36,6 +36,12 @@ const TAG_COLORS: Record<string, string> = {
         <!-- 2nd post below headline -->
         <div class="sub-hero-rule" *ngIf="subHero"></div>
         <a class="sub-hero" *ngIf="subHero" (click)="selectPost(subHero.slug)">
+          <!-- mobile-only thumbnail for sub-hero -->
+          <div class="side-thumb-mobile" *ngIf="subHero.firstImage" [class.contain-pad]="imageFits[subHero.firstImage]?.pad">
+            <img [src]="subHero.firstImage" [alt]="subHero.title" loading="lazy"
+                 [style.object-fit]="imageFits[subHero.firstImage]?.fit || 'cover'"
+                 (load)="onImageLoad($event, subHero.firstImage)" />
+          </div>
           <div class="side-tags">
             <span class="tag" *ngFor="let tag of subHero.tags" [style.background]="tagColor(tag)">{{ tag }}</span>
           </div>
@@ -210,15 +216,18 @@ export class PostListComponent implements OnInit, OnChanges {
     const img = event.target as HTMLImageElement;
     const w = img.naturalWidth;
     const h = img.naturalHeight;
-    // SVGs and unknown dimensions: default to cover (they fill the slot fine)
     if (!w || !h) {
       this.imageFits[url] = { fit: 'cover', pad: false };
       return;
     }
     const ratio = w / h;
-    // Only use contain for genuinely extreme aspect ratios (very wide banners)
-    const extreme = ratio > 3.5 || ratio < 0.3;
-    this.imageFits[url] = { fit: extreme ? 'contain' : 'cover', pad: false };
+    // Use contain when: extreme aspect ratio OR image is small (logo/icon sized)
+    // This prevents small logos like RxJS (512×512 but rendered small) from cropping awkwardly
+    const isSmall = w < 600 && h < 600;
+    const isPng = url.toLowerCase().endsWith('.png') || url.toLowerCase().includes('.png?');
+    const extremeRatio = ratio > 3.5 || ratio < 0.3;
+    const useContain = extremeRatio || (isSmall && isPng);
+    this.imageFits[url] = { fit: useContain ? 'contain' : 'cover', pad: useContain };
   }
 
   selectPost(slug: string) {
