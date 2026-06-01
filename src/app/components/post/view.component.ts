@@ -12,6 +12,7 @@ export const TAG_COLORS: Record<string, string> = {
   testing: '#15a356',
   trekking: '#e67e22',
   personal: '#8e44ad',
+  music: '#1db954',
 };
 
 @Component({
@@ -274,6 +275,8 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
   private bookmarkKey = '';
   private utterance: SpeechSynthesisUtterance | null = null;
   private speechBlocks: { el: HTMLElement; start: number; end: number }[] = [];
+  private activeAudio: HTMLAudioElement | null = null;
+  private activeAudioRoot: HTMLElement | null = null;
   private speechPlainText = '';
 
   constructor(
@@ -303,6 +306,7 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     this.stopSpeech();
+    this.stopAudio();
     this.restoreScroll();
   }
 
@@ -347,12 +351,16 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
       this.loadRelated();
       this.loadComments();
       this.scrollModalTop();
-      setTimeout(() => this.prepareSpeechBlocks(), 400);
+      setTimeout(() => {
+        this.prepareSpeechBlocks();
+        this.enhanceArticleMedia();
+      }, 400);
     });
   }
 
   closePost() {
     this.stopSpeech();
+    this.stopAudio();
     this.isOpen = false;
     this.commentsOpen = false;
     setTimeout(() => {
@@ -408,7 +416,7 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
     this.utterance = new SpeechSynthesisUtterance(this.speechPlainText);
     const speechLang = this.lang === 'pt' ? 'pt-BR' : 'en-US';
     this.utterance.lang = speechLang;
-    this.utterance.rate = 0.92;
+    this.utterance.rate = 1.02;
     this.utterance.pitch = 1.05;
     this.utterance.onboundary = (ev: SpeechSynthesisEvent) => {
       if (ev.charIndex >= 0) this.highlightAtChar(ev.charIndex);
@@ -476,7 +484,6 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private prepareSpeechBlocks() {
-    // Try both scoped and global selectors to handle mobile rendering contexts
     const body = document.querySelector('.modal .article-body') || document.querySelector('.article-body');
     if (!body) return;
     this.clearSpeechHighlight();
@@ -490,6 +497,110 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
       el.classList.add('speech-block');
       return { el, start, end };
     });
+  }
+
+  private enhanceArticleMedia() {
+    const body = document.querySelector('.modal .article-body') || document.querySelector('.article-body');
+    if (!body) return;
+
+    body.querySelectorAll('.blog-audio-player:not([data-enhanced])').forEach(node => {
+      const root = node as HTMLElement;
+      const src = root.dataset.src || root.getAttribute('data-src') || '';
+      const title = root.dataset.title || root.getAttribute('data-title') || 'Audio';
+      if (!src) return;
+
+      root.setAttribute('data-enhanced', 'true');
+      root.innerHTML = `
+        <button type="button" class="blog-audio-play" aria-label="Play ${this.escapeHtml(title)}">
+          <svg class="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <svg class="icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg>
+        </button>
+        <div class="blog-audio-main">
+          <div class="blog-audio-title">${this.escapeHtml(title)}</div>
+          <div class="blog-audio-track">
+            <div class="blog-audio-progress" role="slider" aria-label="Seek"><div class="blog-audio-progress-fill"></div></div>
+            <div class="blog-audio-time">0:00</div>
+          </div>
+        </div>
+      `;
+
+      const audio = new Audio(src);
+      audio.preload = 'none';
+      const playBtn = root.querySelector('.blog-audio-play') as HTMLButtonElement;
+      const fill = root.querySelector('.blog-audio-progress-fill') as HTMLElement;
+      const timeEl = root.querySelector('.blog-audio-time') as HTMLElement;
+      const progress = root.querySelector('.blog-audio-progress') as HTMLElement;
+
+      const formatTime = (seconds: number) => {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s.toString().padStart(2, '0')}`;
+      };
+
+      const setPlaying = (playing: boolean) => {
+        root.classList.toggle('is-playing', playing);
+      };
+
+      audio.addEventListener('loadedmetadata', () => {
+        timeEl.textContent = `0:00 / ${formatTime(audio.duration || 0)}`;
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        if (!audio.duration) return;
+        fill.style.width = `${(audio.currentTime / audio.duration) * 100}%`;
+        timeEl.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+      });
+
+      audio.addEventListener('ended', () => {
+        setPlaying(false);
+        if (this.activeAudio === audio) {
+          this.activeAudio = null;
+          this.activeAudioRoot = null;
+        }
+      });
+
+      progress.addEventListener('click', (event: MouseEvent) => {
+        if (!audio.duration) return;
+        const rect = progress.getBoundingClientRect();
+        const ratio = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+        audio.currentTime = ratio * audio.duration;
+      });
+
+      playBtn.addEventListener('click', () => {
+        if (audio.paused) {
+          if (this.activeAudio && this.activeAudio !== audio) {
+            this.activeAudio.pause();
+            this.activeAudioRoot?.classList.remove('is-playing');
+          }
+          audio.play().catch(() => {});
+          this.activeAudio = audio;
+          this.activeAudioRoot = root;
+          setPlaying(true);
+        } else {
+          audio.pause();
+          setPlaying(false);
+          if (this.activeAudio === audio) {
+            this.activeAudio = null;
+            this.activeAudioRoot = null;
+          }
+        }
+      });
+    });
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  private stopAudio() {
+    if (!this.activeAudio) return;
+    this.activeAudio.pause();
+    this.activeAudioRoot?.classList.remove('is-playing');
+    this.activeAudio = null;
+    this.activeAudioRoot = null;
   }
 
   private highlightAtChar(index: number) {
@@ -589,7 +700,13 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
     this.translateService.translate(this.post.title, 'en', this.lang)
       .subscribe(t => this.displayTitle = t);
     this.translateService.translateMarkdown(this.post.post, 'en', this.lang)
-      .subscribe(c => this.displayContent = c);
+      .subscribe(c => {
+        this.displayContent = c;
+        setTimeout(() => {
+          this.prepareSpeechBlocks();
+          this.enhanceArticleMedia();
+        }, 400);
+      });
   }
 
   // ── Related ───────────────────────────────────────────────────────────────

@@ -70,7 +70,13 @@ h1, h2, h3, h4, h5, h6 {
   h2 { font-size: 1.45rem; border-bottom: 1px solid $rule; padding-bottom: 0.3rem; }
   h3 { font-size: 1.15rem; }
 
-  p { margin: 0 0 1.2rem; }
+  p { margin: 0 0 1.5rem; }
+
+  p br {
+    display: block;
+    margin-bottom: 0.75em;
+    content: "";
+  }
 
   img {
     display: block;
@@ -134,6 +140,69 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 6px;
   }
 
+  .blog-audio-player {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: min(100%, 560px);
+    margin: 2rem auto 0;
+    padding: 14px 16px;
+    border: 1px solid $rule;
+    border-radius: 8px;
+    background: $paper-warm;
+    text-align: left;
+  }
+
+  .blog-audio-play {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid $rule-dark;
+    border-radius: 50%;
+    background: $paper;
+    color: $ink;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .blog-audio-title {
+    font-family: $font-body;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: $ink;
+    margin-bottom: 8px;
+  }
+
+  .blog-audio-track {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .blog-audio-progress {
+    flex: 1;
+    height: 4px;
+    background: $rule;
+    border-radius: 999px;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .blog-audio-progress-fill {
+    width: 0;
+    height: 100%;
+    background: $accent;
+  }
+
+  .blog-audio-time {
+    font-family: $font-body;
+    font-size: 0.72rem;
+    color: $ink-faint;
+    font-variant-numeric: tabular-nums;
+  }
+
   a { color: $accent; text-decoration: underline; text-underline-offset: 2px; }
   ul, ol { padding-left: 24px; margin: 0 0 1.2rem; }
   li { margin-bottom: 0.4rem; }
@@ -164,6 +233,22 @@ h1, h2, h3, h4, h5, h6 {
   pre code { background: none; }
   code { background: $dark-paper-warm; color: $dark-ink; }
   a { color: $dark-accent; }
+
+  .blog-audio-player {
+    background: $dark-paper-warm;
+    border-color: $dark-rule;
+  }
+
+  .blog-audio-play {
+    background: $dark-paper;
+    border-color: $dark-rule;
+    color: $dark-ink;
+  }
+
+  .blog-audio-title { color: $dark-ink; }
+  .blog-audio-progress { background: $dark-rule; }
+  .blog-audio-progress-fill { background: $dark-accent; }
+  .blog-audio-time { color: $dark-ink-faint; }
 }
 
 pre {

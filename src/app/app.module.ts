@@ -11,7 +11,7 @@ import { AboutComponent } from './components/about/about.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { MarkdownModule, MarkdownService } from 'ngx-markdown';
+import { MarkdownModule, MarkdownService, MARKED_OPTIONS } from 'ngx-markdown';
 import { PostListComponent } from './components/post/list.component';
 import { PostViewComponent } from './components/post/view.component';
 import { LoadingComponent } from './components/shared/loading.component';
@@ -36,7 +36,14 @@ import { LoadingComponent } from './components/shared/loading.component';
             { path: 'post/:slug', component: PostViewComponent },
         ], { scrollPositionRestoration: 'enabled' }),
         MarkdownModule.forRoot({
-            sanitize: SecurityContext.NONE
+            sanitize: SecurityContext.NONE,
+            markedOptions: {
+                provide: MARKED_OPTIONS,
+                useValue: {
+                    gfm: true,
+                    breaks: true,
+                },
+            },
         })
     ],
     providers: [

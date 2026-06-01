@@ -13,6 +13,7 @@ const TAG_COLORS: Record<string, string> = {
   testing: '#15a356',
   trekking: '#e67e22',
   personal: '#8e44ad',
+  music: '#1db954',
 };
 
 @Component({
