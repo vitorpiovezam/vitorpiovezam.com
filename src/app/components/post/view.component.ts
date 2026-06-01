@@ -162,7 +162,7 @@ export const TAG_COLORS: Record<string, string> = {
                   <div class="comment-actions">
                     <button class="comment-action" (click)="recommend(c)">
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                      Recommend{{ c.recommends ? ' ' + c.recommends : '' }}
+                      Recommend{{ c.recommends ? ' (' + c.recommends + ')' : '' }}
                     </button>
                     <button class="comment-action" (click)="startReply(c)">Reply</button>
                     <span class="comment-ellipsis">···</span>
@@ -191,7 +191,7 @@ export const TAG_COLORS: Record<string, string> = {
                         <div class="comment-actions">
                           <button class="comment-action" (click)="recommend(r)">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/></svg>
-                            Recommend{{ r.recommends ? ' ' + r.recommends : '' }}
+                            Recommend{{ r.recommends ? ' (' + r.recommends + ')' : '' }}
                           </button>
                         </div>
                       </div>
@@ -481,7 +481,9 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
   closeComments() { this.commentsOpen = false; }
 
   get topLevelComments(): Comment[] {
-    return this.comments.filter(c => !c.parentId);
+    return this.comments
+      .filter(c => !c.parentId)
+      .sort((a, b) => (b.recommends || 0) - (a.recommends || 0));
   }
 
   getReplies(parentId: string): Comment[] {
