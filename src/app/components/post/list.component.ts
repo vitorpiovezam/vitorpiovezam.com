@@ -22,14 +22,27 @@ const TAG_COLORS: Record<string, string> = {
 
     <div class="nyt-grid" [ngClass]="'layout-' + gridLayout">
 
-      <!-- Hero (left column text) -->
-      <div class="grid-hero-text" (click)="selectPost(hero.slug)">
-        <div class="hero-tags">
-          <span class="tag" *ngFor="let tag of hero.tags" [style.background]="tagColor(tag)">{{ tag }}</span>
-        </div>
-        <h2 class="hero-title">{{ hero.displayTitle || hero.title }}</h2>
-        <p class="hero-preview">{{ hero.displayPreview || hero.textPreview }}</p>
-        <span class="hero-meta">{{ hero.postDate | date: 'MMMM d, y' }} · {{ readingTime(hero) }} min read</span>
+      <!-- Hero (left column text + sub-hero below) -->
+      <div class="grid-hero-text">
+        <a class="hero-main" (click)="selectPost(hero.slug)">
+          <div class="hero-tags">
+            <span class="tag" *ngFor="let tag of hero.tags" [style.background]="tagColor(tag)">{{ tag }}</span>
+          </div>
+          <h2 class="hero-title">{{ hero.displayTitle || hero.title }}</h2>
+          <p class="hero-preview">{{ hero.displayPreview || hero.textPreview }}</p>
+          <span class="hero-meta">{{ hero.postDate | date: 'MMMM d, y' }} · {{ readingTime(hero) }} min read</span>
+        </a>
+
+        <!-- 2nd post below headline -->
+        <div class="sub-hero-rule" *ngIf="subHero"></div>
+        <a class="sub-hero" *ngIf="subHero" (click)="selectPost(subHero.slug)">
+          <div class="side-tags">
+            <span class="tag" *ngFor="let tag of subHero.tags" [style.background]="tagColor(tag)">{{ tag }}</span>
+          </div>
+          <h3 class="sub-hero-title">{{ subHero.displayTitle || subHero.title }}</h3>
+          <p class="sub-hero-preview">{{ subHero.displayPreview || subHero.textPreview }}</p>
+          <span class="hero-meta">{{ subHero.postDate | date: 'MMM d, y' }}</span>
+        </a>
       </div>
 
       <!-- Hero center image (always rendered for layout; hidden via CSS if no src) -->
@@ -43,6 +56,11 @@ const TAG_COLORS: Record<string, string> = {
       <!-- Side column -->
       <div class="grid-side">
         <a class="side-item" *ngFor="let post of sidePosts; let i = index" (click)="selectPost(post.slug)">
+          <div class="side-thumb" *ngIf="post.firstImage">
+            <img [src]="post.firstImage" [alt]="post.title" loading="lazy"
+                 [style.object-fit]="imageFits[post.firstImage]?.fit || 'cover'"
+                 (load)="onImageLoad($event, post.firstImage)" />
+          </div>
           <div class="side-tags">
             <span class="tag" *ngFor="let tag of post.tags" [style.background]="tagColor(tag)">{{ tag }}</span>
           </div>
@@ -97,6 +115,7 @@ export class PostListComponent implements OnInit, OnChanges {
   posts: Post[] = [];
   displayPosts: Post[] = [];
   hero: Post;
+  subHero: Post;
   sidePosts: Post[] = [];
   bottomPosts: Post[] = [];
   loading = true;
@@ -148,19 +167,20 @@ export class PostListComponent implements OnInit, OnChanges {
     const total = this.displayPosts.length;
 
     this.hero = this.displayPosts[0];
+    this.subHero = total > 1 ? this.displayPosts[1] : null;
 
     if (total <= 3) {
       this.gridLayout = 'a';
-      this.sidePosts = this.displayPosts.slice(1, 3);
+      this.sidePosts = this.displayPosts.slice(2, 4);
       this.bottomPosts = [];
     } else if (total <= 5) {
       this.gridLayout = 'b';
-      this.sidePosts = this.displayPosts.slice(1, 3);
-      this.bottomPosts = this.displayPosts.slice(3);
+      this.sidePosts = this.displayPosts.slice(2, 4);
+      this.bottomPosts = this.displayPosts.slice(4);
     } else {
       this.gridLayout = 'c';
-      this.sidePosts = this.displayPosts.slice(1, 4);
-      this.bottomPosts = this.displayPosts.slice(4);
+      this.sidePosts = this.displayPosts.slice(2, 5);
+      this.bottomPosts = this.displayPosts.slice(5);
     }
   }
 

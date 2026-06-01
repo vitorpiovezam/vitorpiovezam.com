@@ -90,9 +90,54 @@
   grid-area: hero-text;
   padding-right: 24px;
   border-right: 1px solid $rule;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-main {
+  display: block;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
   transition: transform 0.1s;
   &:active { transform: scale(0.99); }
+}
+
+.sub-hero-rule {
+  height: 1px;
+  background: $rule;
+  margin: 20px 0;
+}
+
+.sub-hero {
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  transition: opacity 0.15s;
+  &:hover .sub-hero-title { color: $accent; }
+  &:active { opacity: 0.75; }
+}
+
+.sub-hero-title {
+  font-family: $font-headline;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 6px 0 6px;
+  transition: color 0.2s;
+}
+
+.sub-hero-preview {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: $ink-light;
+  margin: 0 0 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .hero-tags { margin-bottom: 8px; }
@@ -173,6 +218,24 @@
   padding-bottom: 16px;
   &:active { opacity: 0.75; }
 }
+
+// Side thumbnail image
+.side-thumb {
+  width: 100%;
+  height: 90px;
+  overflow: hidden;
+  border-radius: 2px;
+  margin-bottom: 8px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s;
+  }
+}
+.side-item:hover .side-thumb img { transform: scale(1.03); }
 
 .side-tags { margin-bottom: 4px; }
 
@@ -315,9 +378,9 @@
 
 // Dark mode
 :host-context(.dark-theme) {
-  .hero-title, .side-title, .bottom-title { color: $dark-ink; }
-  .grid-hero-text:hover .hero-title, .side-item:hover .side-title, .bottom-card:hover .bottom-title { color: $dark-accent; }
-  .hero-preview, .side-preview, .bottom-preview { color: $dark-ink-light; }
+  .hero-title, .sub-hero-title, .side-title, .bottom-title { color: $dark-ink; }
+  .hero-main:hover .hero-title, .sub-hero:hover .sub-hero-title, .side-item:hover .side-title, .bottom-card:hover .bottom-title { color: $dark-accent; }
+  .hero-preview, .sub-hero-preview, .side-preview, .bottom-preview { color: $dark-ink-light; }
   .hero-meta, .side-meta, .bottom-meta, .img-caption { color: $dark-ink-faint; }
   .grid-hero-text, .grid-hero-img { border-color: $dark-rule; }
   .grid-side { border-color: $dark-rule; }
