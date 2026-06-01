@@ -13,6 +13,7 @@
 
   .topbar { border-color: $dark-rule; background: $dark-paper; }
   .tag-nav-item { color: $dark-ink-faint; &:hover, &.active { color: $dark-ink; border-bottom-color: $dark-ink; } }
+  .tag-nav-bookmark { color: $dark-ink-faint; &:hover, &.active { color: $dark-accent; border-bottom-color: $dark-accent; } }
   .lang-toggle button { border-color: $dark-rule; color: $dark-ink-faint; &.active { color: $dark-ink; background: $dark-paper-warm; } }
   .theme-btn { border-color: $dark-rule; }
   .footer-rule { background: $dark-rule; }
@@ -76,6 +77,25 @@
   &:hover { color: $ink; }
   &.active { color: $ink; border-bottom-color: $ink; font-weight: 600; }
   &:active { opacity: 0.6; }
+}
+
+.tag-nav-bookmark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  padding: 12px 14px;
+  border: none;
+  background: none;
+  color: $ink-light;
+
+  svg { display: block; }
+
+  &:hover { color: $accent; }
+  &.active {
+    color: $accent;
+    border-bottom-color: $accent;
+  }
 }
 
 .topbar-actions {
@@ -207,20 +227,45 @@
   }
 }
 
-// Photo sits below the bio text, above social links
+// Profile photo — square
 .about-photo {
   margin: 28px 0 24px;
 
   img {
-    width: min(100%, 280px);
-    height: auto;
-    max-height: 360px;
-    aspect-ratio: 4 / 5;
+    width: 180px;
+    height: 180px;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
     object-position: center 15%;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     display: block;
+  }
+}
+
+// Icon links displayed directly below the photo
+.about-photo-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+
+  .photo-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: $accent;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.12s;
+
+    svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    &:hover { opacity: 0.72; }
+    &:active { transform: scale(0.96); }
   }
 }
 
@@ -269,9 +314,35 @@
   color: $ink-faint;
 }
 
+// Flickr link row above iframes
+.flickr-header-link {
+  margin-bottom: 10px;
+}
+
+.flickr-link-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: $accent;
+  font-family: $font-body;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: opacity 0.2s;
+
+  &:hover { opacity: 0.72; }
+}
+
+.flickr-link-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
 // Right side: Flickr album embed
 .about-right {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: stretch;
   padding-top: 8px;

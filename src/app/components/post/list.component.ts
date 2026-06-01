@@ -76,6 +76,11 @@ const TAG_COLORS: Record<string, string> = {
 
   </section>
 
+  <div class="empty-saved" *ngIf="!loading && filterSaved && !displayPosts?.length">
+    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    <p>No saved articles yet. Open a post and tap the bookmark icon to save it here.</p>
+  </div>
+
   <div class="loading-wrap" *ngIf="loading">
     <div class="loading-spinner"></div>
     <p class="loading-text">Loading…</p>
@@ -86,6 +91,7 @@ const TAG_COLORS: Record<string, string> = {
 })
 export class PostListComponent implements OnInit, OnChanges {
   @Input() filterTag = '';
+  @Input() filterSaved = false;
   @Input() lang = 'en';
 
   posts: Post[] = [];
@@ -113,7 +119,7 @@ export class PostListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['filterTag'] && !changes['filterTag'].firstChange) {
+    if ((changes['filterTag'] || changes['filterSaved']) && this.posts.length) {
       this.applyFilter();
     }
     if (changes['lang'] && !changes['lang'].firstChange) {
@@ -123,7 +129,9 @@ export class PostListComponent implements OnInit, OnChanges {
 
   private applyFilter() {
     let filtered = this.posts;
-    if (this.filterTag) {
+    if (this.filterSaved) {
+      filtered = this.posts.filter(p => !!localStorage.getItem(`bookmark:${p.slug}`));
+    } else if (this.filterTag) {
       filtered = this.posts.filter(p =>
         p.tags?.some(t => t.toLowerCase() === this.filterTag.toLowerCase())
       );
@@ -190,12 +198,17 @@ export class PostListComponent implements OnInit, OnChanges {
   onImageLoad(event: Event, url: string) {
     if (!url) return;
     const img = event.target as HTMLImageElement;
-    const ratio = img.naturalWidth / img.naturalHeight;
-    const area = img.naturalWidth * img.naturalHeight;
-    const small = area < 120000 || /favicon|icon-|192x192/i.test(url);
-    const extreme = ratio > 2.2 || ratio < 0.85;
-    const useContain = small || extreme;
-    this.imageFits[url] = { fit: useContain ? 'contain' : 'cover', pad: useContain };
+    const w = img.naturalWidth;
+    const h = img.naturalHeight;
+    // SVGs and unknown dimensions: default to cover (they fill the slot fine)
+    if (!w || !h) {
+      this.imageFits[url] = { fit: 'cover', pad: false };
+      return;
+    }
+    const ratio = w / h;
+    // Only use contain for genuinely extreme aspect ratios (very wide banners)
+    const extreme = ratio > 3.5 || ratio < 0.3;
+    this.imageFits[url] = { fit: extreme ? 'contain' : 'cover', pad: false };
   }
 
   selectPost(slug: string) {

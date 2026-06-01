@@ -394,16 +394,55 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     this.speechPlainText = this.stripForSpeech(this.displayContent || this.post.post);
 
     this.utterance = new SpeechSynthesisUtterance(this.speechPlainText);
-    this.utterance.lang = this.lang === 'pt' ? 'pt-BR' : 'en-US';
-    this.utterance.rate = 0.95;
+    const speechLang = this.lang === 'pt' ? 'pt-BR' : 'en-US';
+    this.utterance.lang = speechLang;
+    this.utterance.rate = 0.92;
+    this.utterance.pitch = 1.05;
     this.utterance.onboundary = (ev: SpeechSynthesisEvent) => {
       if (ev.charIndex >= 0) this.highlightAtChar(ev.charIndex);
     };
     this.utterance.onend = () => this.stopSpeech();
     this.utterance.onerror = () => this.stopSpeech();
 
-    window.speechSynthesis.speak(this.utterance);
+    this.startSpeech(speechLang);
     this.listening = true;
+  }
+
+  /** Uses the browser Web Speech API (no external service). Prefers a female voice when available. */
+  private startSpeech(lang: string) {
+    const speak = () => {
+      const voice = this.pickPreferredVoice(lang);
+      if (voice) this.utterance.voice = voice;
+      window.speechSynthesis.speak(this.utterance);
+    };
+
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length) {
+      speak();
+    } else {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.onvoiceschanged = null;
+        speak();
+      };
+    }
+  }
+
+  private pickPreferredVoice(lang: string): SpeechSynthesisVoice | null {
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices.length) return null;
+
+    const prefix = lang.startsWith('pt') ? 'pt' : 'en';
+    const inLang = voices.filter(v => v.lang.toLowerCase().startsWith(prefix));
+    const pool = inLang.length ? inLang : voices;
+
+    const femaleHint = /female|woman|feminina|luciana|francisca|samantha|victoria|karen|moira|fiona|zira|helena|maria|google português|microsoft (.* )?heloisa/i;
+    const maleHint = /\bmale\b|\. david|\. mark|\. james|\. daniel|\. richard|\. tom\b|\. alex\b|\. fred\b/i;
+
+    const female = pool.find(v => femaleHint.test(v.name));
+    if (female) return female;
+
+    const notMale = pool.find(v => !maleHint.test(v.name));
+    return notMale || pool[0];
   }
 
   private stopSpeech() {
