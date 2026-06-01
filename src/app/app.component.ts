@@ -1,57 +1,197 @@
 import { LocalStorageService } from './services/local-storage.service';
+import { TranslateService } from './services/translate.service';
 import { Component } from '@angular/core';
-import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { faAdjust } from '@fortawesome/free-solid-svg-icons';
+
+export interface FlickrAlbum {
+  id: string;
+  title: string;
+  shortLabel: string;
+  url: string;
+  playerUrl: string;
+}
 
 @Component({
     selector: 'app-root',
     template: `
-      <div [ngClass]="{'container': true, 'dark-theme': darkTheme, 'light-theme': !darkTheme}">
-        <div class="about">
-          <app-about>
-            <div>
-              <button class="menu-item theme-toggler" (click)="toggleTheme()" [ngClass]="{'dark-theme': !darkTheme, 'light-theme': darkTheme}">
-                <fa-icon [icon]="lamp" inline="true"></fa-icon>
-                <span>{{ darkTheme ? 'dark' : 'light' }} mode </span>
+      <div [ngClass]="{'nyt': true, 'dark-theme': darkTheme}">
+
+        <div class="topbar">
+          <div class="topbar-inner">
+            <nav class="tag-nav">
+              <a class="tag-nav-item"
+                *ngFor="let tag of allTags"
+                [class.active]="activeTag === tag"
+                (click)="filterByTag(tag)">{{ tag }}</a>
+            </nav>
+            <div class="topbar-actions">
+              <div class="lang-toggle">
+                <button [class.active]="lang === 'en'" (click)="setLang('en')">EN</button>
+                <button [class.active]="lang === 'pt'" (click)="setLang('pt')">PT</button>
+              </div>
+              <button class="theme-btn" (click)="toggleTheme()" [attr.aria-label]="darkTheme ? 'Light mode' : 'Dark mode'">
+                <fa-icon [icon]="themeIcon" inline="true"></fa-icon>
               </button>
             </div>
+          </div>
+        </div>
 
-            <div class="icons">
-              <p>
-                <a title="GitHub" href="https://github.com/vitorpiovezam" target="_blank"><svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
-                <a title="X (Formely Twitter)" href="https://x.com/vitorpiovezam" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 24 24"><path d="M 2.3671875 3 L 9.4628906 13.140625 L 2.7402344 21 L 5.3808594 21 L 10.644531 14.830078 L 14.960938 21 L 21.871094 21 L 14.449219 10.375 L 20.740234 3 L 18.140625 3 L 13.271484 8.6875 L 9.2988281 3 L 2.3671875 3 z M 6.2070312 5 L 8.2558594 5 L 18.033203 19 L 16.001953 19 L 6.2070312 5 z"></path></svg></a>
-                <a title="LinkedIn" href="https://www.linkedin.com/in/vitorpiovezam/" target="_blank" style="top: -2.5px;position: relative;"><svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#0077B5" d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zM5 8H0v16h5V8zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/></svg></a>
-                <a title="Strava" href="https://www.strava.com/athletes/35866145" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#FC4C02" d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg></a>
-                <a title="Flickr" href="https://www.flickr.com/people/190210202@N04/" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="6.5" cy="12" r="4.5" fill="#0063dc"/><circle cx="17.5" cy="12" r="4.5" fill="#ff0084"/></svg></a>
-              </p>
+        <main class="content">
+          <app-post-list [filterTag]="activeFilterTag" [lang]="lang"></app-post-list>
+        </main>
+
+        <app-post-view [lang]="lang"></app-post-view>
+
+        <section class="about-section" id="about">
+          <div class="about-grid">
+            <div class="about-left">
+              <h2 class="about-title">About me</h2>
+              <div class="about-text">
+                <p>My name is Vitor, I'm {{ myAge }} year's old.</p>
+                <p>I like to ride my bike, listen to alternative music, watch documentaries and drink orange juice.</p>
+                <p>My passion is development. Optimize processes and shortening paths is an art that programming makes possible.</p>
+                <p>So in recent years I have developed my skills in logic, typescript and cloud computing. Acting as Fullstack Angular/Node, currently as Senior Software Engineer at <a target="_blank" href="https://sciensa.ai/pt">Sciensa AI</a>.</p>
+              </div>
+
+              <div class="about-photo">
+                <img src="/assets/images/perfil.jpg" alt="Vitor Piovezam" />
+              </div>
+
+              <div class="about-social">
+                <a href="https://github.com/vitorpiovezam" target="_blank" class="social-link">
+                  <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                  <div class="social-text">
+                    <span class="social-name">GitHub</span>
+                    <span class="social-sub">See my projects</span>
+                  </div>
+                </a>
+                <a href="https://www.linkedin.com/in/vitorpiovezam/" target="_blank" class="social-link">
+                  <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                  <div class="social-text">
+                    <span class="social-name">LinkedIn</span>
+                    <span class="social-sub">Follow my career</span>
+                  </div>
+                </a>
+                <a href="https://www.flickr.com/people/190210202@N04/" target="_blank" class="social-link">
+                  <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M0 12a6 6 0 1012 0A6 6 0 100 12zm12 0a6 6 0 1012 0 6 6 0 10-12 0z"/></svg>
+                  <div class="social-text">
+                    <span class="social-name">Flickr</span>
+                    <span class="social-sub">My photos with original quality</span>
+                  </div>
+                </a>
+              </div>
             </div>
-          </app-about>
-        </div>
 
-        <div class="posts">
-          <app-post-list></app-post-list>
-        </div>
+            <div class="about-right">
+              <div class="flickr-panel">
+                <div class="flickr-panel-header">
+                  <h3 class="flickr-album-title">{{ activeFlickrAlbum.title }}</h3>
+                  <a class="flickr-album-link" [href]="activeFlickrAlbum.url" target="_blank" rel="noopener">
+                    View on Flickr ↗
+                  </a>
+                </div>
+                <div class="flickr-embed-wrap">
+                  <iframe
+                    [src]="flickrPlayerUrl"
+                    title="{{ activeFlickrAlbum.title }} — Flickr album"
+                    loading="lazy"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+                <nav class="flickr-album-tabs" *ngIf="flickrAlbums.length > 1" aria-label="Flickr albums">
+                  <button
+                    type="button"
+                    class="flickr-tab"
+                    *ngFor="let album of flickrAlbums"
+                    [class.active]="album.id === activeFlickrAlbum.id"
+                    (click)="selectFlickrAlbum(album)"
+                  >{{ album.shortLabel }}</button>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        <div class="post">
-          <app-post-view></app-post-view>
-        </div>
-    </div>
-  `,
+        <footer class="footer">
+          <div class="footer-inner">
+            <div class="footer-rule"></div>
+            <p class="footer-copy">&copy; {{ currentYear }} Vitor Piovezam</p>
+          </div>
+        </footer>
+      </div>
+    `,
     styleUrls: ['./app.component.scss'],
     standalone: false
 })
 export class AppComponent {
   title = 'vitor-js';
+  currentYear = new Date().getFullYear();
   darkTheme = this.localStorageService.has('darkTheme');
-  lamp = faLightbulb;
-  
-  constructor(private localStorageService: LocalStorageService) { 
-    document.querySelector('body').style.backgroundColor = this.darkTheme ? '#1d1d1d' : 'white';
+  themeIcon = faAdjust;
+  activeTag = 'all';
+  lang = 'en';
+  myAge: number;
+
+  allTags = ['all', 'angular', 'rxjs', 'graphql', 'css', 'testing', 'trekking', 'personal'];
+
+  flickrAlbums: FlickrAlbum[] = [
+    {
+      id: 'camboriu',
+      title: '02/2022 — Balneário Camboriú',
+      shortLabel: 'Camboriú',
+      url: 'https://www.flickr.com/photos/190210202@N04/albums/72177720296954807/',
+      playerUrl: 'https://www.flickr.com/photos/190210202@N04/albums/72177720296954807/player/',
+    },
+  ];
+
+  activeFlickrAlbum: FlickrAlbum = this.flickrAlbums[0];
+
+  get flickrPlayerUrl(): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.activeFlickrAlbum.playerUrl);
+  }
+
+  get activeFilterTag(): string {
+    return this.activeTag === 'all' ? '' : this.activeTag;
+  }
+
+  constructor(
+    private localStorageService: LocalStorageService,
+    private translateService: TranslateService,
+    private sanitizer: DomSanitizer,
+  ) {
+    this.applyBackground();
+    this.myAge = this.calculateAge();
   }
 
   toggleTheme() {
     this.darkTheme = !this.darkTheme;
+    this.darkTheme
+      ? this.localStorageService.set('darkTheme', true)
+      : this.localStorageService.remove('darkTheme');
+    this.applyBackground();
+  }
 
-    this.darkTheme ? this.localStorageService.set('darkTheme', true) : this.localStorageService.remove('darkTheme');
-    document.querySelector('body').style.backgroundColor = this.darkTheme ? '#1d1d1d' : 'white';
+  filterByTag(tag: string) {
+    this.activeTag = tag;
+  }
+
+  selectFlickrAlbum(album: FlickrAlbum) {
+    this.activeFlickrAlbum = album;
+  }
+
+  setLang(lang: string) {
+    this.lang = lang;
+    this.translateService.setLang(lang);
+  }
+
+  private applyBackground() {
+    document.querySelector('body').style.backgroundColor = this.darkTheme ? '#1a1a1a' : '#fff';
+  }
+
+  private calculateAge(bornAt: Date = new Date('04/16/1999')): number {
+    const diffMs = Date.now() - bornAt.getTime();
+    const ageDt = new Date(diffMs);
+    return Math.abs(ageDt.getUTCFullYear() - 1970);
   }
 }

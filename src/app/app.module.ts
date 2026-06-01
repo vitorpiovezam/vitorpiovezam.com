@@ -1,5 +1,6 @@
 import { PostService } from './services/post.service';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { NgModule, SecurityContext } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -29,6 +30,7 @@ import { LoadingComponent } from './components/shared/loading.component';
     imports: [
         FontAwesomeModule,
         BrowserModule,
+        FormsModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         RouterModule.forRoot([
             { path: 'post/:slug', component: PostViewComponent },

@@ -1,10 +1,1 @@
-@import '../../../assets/core.scss';
 
-.photo {
-  width: 100%;
-  filter: brightness(0.8);
-
-  @include below($screen-sm) {
-    display: none;
-  }
-}

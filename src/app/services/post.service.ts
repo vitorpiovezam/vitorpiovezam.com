@@ -1,57 +1,62 @@
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from "@angular/core";
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { Post } from '../components/post/list.component';
+
+export interface Comment {
+  slug: string;
+  commentId: string;
+  author: string;
+  text: string;
+  createdAt: string;
+  active: boolean;
+  parentId?: string;
+  recommends: number;
+}
 
 @Injectable()
 export class PostService {
-  mock: any[] = [
-    {
-      id: 123123123,
-      title: 'Lorem ipson',
-      type: 'development',
-      slug: 'FOO',
-      textPreview: '23123',
-      postDate: new Date(),
-      text: `<iframe width="200px" height="200px" src="http://www.google.com"></iframe>`
-    },
-    {
-      id: 123123123,
-      title: 'Lorem ipson',
-      type: 'development',
-      text: `## SALVE`
-    },
-    {
-      id: 123123123,
-      title: 'Lorem ipson',
-      type: 'music',
-      text: `<iframe width="200px" height="200px" src="http://www.google.com"></iframe>`
-    },
-    {
-      id: 123123123,
-      title: 'Lorem ipson',
-      type: 'development',
-      text: `boolean fooo boolean fooo boolean fooo boolean foooboolean
-      foooboolean fooo boolean fooo boolean fooo boolean fooo boolean fooo boolean fooo`
-    }
-  ];
   apiUrl: string;
+  private postsCache: Post[] | null = null;
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     if (!environment.apiUrl) throw new Error('apiUrl is not defined');
     this.apiUrl = environment.apiUrl;
   }
 
   getLastPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(`${this.apiUrl}/posts`);
+    if (this.postsCache) return of(this.postsCache);
+    return this.http.get<any[]>(`${this.apiUrl}/posts`).pipe(
+      map(posts => posts.map(p => this.normalize(p))),
+      tap(posts => this.postsCache = posts)
+    );
   }
 
-  getPostBySlug(slug: string) {
-    return this.http.get(`${this.apiUrl}/post/${slug}`);
+  getPostBySlug(slug: string): Observable<Post> {
+    return this.http.get<any>(`${this.apiUrl}/post/${slug}`).pipe(
+      map(p => this.normalize(p))
+    );
   }
 
-  getPostsByType(tagName: string) {
-    return this.http.get(this.apiUrl + '/lastPosts');
+  getComments(slug: string): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.apiUrl}/post/${slug}/comments`);
+  }
+
+  postComment(slug: string, author: string, text: string, parentId?: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/post/${slug}/comments`, { author, text, parentId });
+  }
+
+  recommendComment(slug: string, commentId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/post/${slug}/comments/${commentId}/recommend`, {});
+  }
+
+  // Handles both old API (type: string) and new API (tags: string[])
+  private normalize(p: any): Post {
+    const tags = Array.isArray(p.tags) && p.tags.length
+      ? p.tags
+      : p.type ? p.type.split(',').map((t: string) => t.trim()).filter(Boolean) : [];
+    return { ...p, tags, firstImage: p.firstImage || '' };
   }
 }

@@ -2,53 +2,55 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-loading',
-    template: '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>',
-    styles: [
-        `
-    .lds-ring {
-      display: inline-block;
-      position: relative;
-      width: 80px;
-      height: 80px;
-      left: 50%;
-      top: 50%;
+    template: `
+    <div class="skeleton">
+      <div class="sk-line sk-cat"></div>
+      <div class="sk-line sk-title"></div>
+      <div class="sk-line sk-title-short"></div>
+      <div class="sk-line sk-meta"></div>
+      <div class="sk-rule"></div>
+      <div class="sk-line sk-body"></div>
+      <div class="sk-line sk-body"></div>
+      <div class="sk-line sk-body-short"></div>
+    </div>
+    `,
+    styles: [`
+    .skeleton {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 0;
     }
 
-    .lds-ring div {
-      box-sizing: border-box;
-      display: block;
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      margin: 4px;
-      border: 4px solid aquamarine;
-      border-radius: 50%;
-      animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-      border-color: aquamarine transparent transparent transparent;
+    .sk-line {
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: 3px;
+      margin-bottom: 14px;
     }
 
-    .lds-ring div:nth-child(1) {
-      animation-delay: -0.45s;
+    .sk-cat { width: 60px; height: 12px; }
+    .sk-title { width: 90%; height: 32px; }
+    .sk-title-short { width: 55%; height: 32px; }
+    .sk-meta { width: 180px; height: 14px; margin-bottom: 20px; }
+    .sk-rule { height: 1px; background: #eee; margin-bottom: 24px; }
+    .sk-body { width: 100%; height: 16px; }
+    .sk-body-short { width: 70%; height: 16px; }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
-    .lds-ring div:nth-child(2) {
-      animation-delay: -0.3s;
-    }
-
-    .lds-ring div:nth-child(3) {
-      animation-delay: -0.15s;
-    }
-
-    @keyframes lds-ring {
-      0% {
-        transform: rotate(0deg);
+    :host-context(.dark-theme) {
+      .sk-line {
+        background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.4s ease-in-out infinite;
       }
-      100% {
-        transform: rotate(360deg);
-      }
+      .sk-rule { background: #333; }
     }
-    `
-    ],
+    `],
     standalone: false
 })
 export class LoadingComponent {

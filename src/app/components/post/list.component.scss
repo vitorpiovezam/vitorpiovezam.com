@@ -1,0 +1,328 @@
+@use '../../../assets/core.scss' as *;
+
+.newspaper { view-transition-name: post-list; }
+
+.loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 0;
+  gap: 16px;
+}
+
+.loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid $rule;
+  border-top-color: $accent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text {
+  font-family: $font-body;
+  font-size: 0.85rem;
+  color: $ink-faint;
+}
+
+// ── Tag chips ─────────────────────────────────────────────────────────────────
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-family: $font-body;
+  font-size: 0.58rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+  margin: 0 4px 0 0;
+  white-space: nowrap;
+  vertical-align: middle;
+  background: $accent;
+}
+
+// ── Grid ──────────────────────────────────────────────────────────────────────
+.nyt-grid {
+  display: grid;
+  gap: 0;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  grid-template-areas:
+    "hero-text hero-img side"
+    "bottom    bottom   bottom";
+}
+
+// When no hero image: collapse center column
+.nyt-grid:not(:has(.grid-hero-img.has-img)) {
+  grid-template-columns: 1.4fr 1fr;
+  grid-template-areas:
+    "hero-text side"
+    "bottom    bottom";
+}
+
+// Hero left text
+.grid-hero-text {
+  grid-area: hero-text;
+  padding-right: 24px;
+  border-right: 1px solid $rule;
+  cursor: pointer;
+  transition: transform 0.1s;
+  &:active { transform: scale(0.99); }
+}
+
+.hero-tags { margin-bottom: 8px; }
+
+.hero-title {
+  font-family: $font-headline;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 12px;
+  transition: color 0.2s;
+}
+.grid-hero-text:hover .hero-title { color: $accent; }
+
+.hero-preview {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: $ink-light;
+  margin: 0 0 12px;
+}
+
+.hero-meta {
+  font-size: 0.68rem;
+  color: $ink-faint;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+// Hero center image
+.grid-hero-img {
+  grid-area: hero-img;
+  padding: 0 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    max-height: 300px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 2px;
+    transition: transform 0.3s;
+  }
+
+  &.contain-pad {
+    background: $paper-warm;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+
+    img {
+      min-height: 0;
+      max-height: 260px;
+      width: auto;
+      max-width: 100%;
+    }
+  }
+
+  &:hover img { transform: scale(1.02); }
+
+  // Hide completely when no image
+  &:not(.has-img) {
+    display: none;
+  }
+}
+
+.img-caption {
+  font-family: $font-body;
+  font-size: 0.68rem;
+  color: $ink-faint;
+  line-height: 1.3;
+}
+
+// Side column
+.grid-side {
+  grid-area: side;
+  padding-left: 20px;
+  border-left: 1px solid $rule;
+}
+
+.side-item {
+  display: block;
+  cursor: pointer;
+  padding-bottom: 16px;
+  &:active { opacity: 0.75; }
+}
+
+.side-tags { margin-bottom: 4px; }
+
+.side-title {
+  font-family: $font-headline;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 6px;
+  transition: color 0.2s;
+}
+.side-item:hover .side-title { color: $accent; }
+
+.side-preview {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: $ink-light;
+  margin: 0 0 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.side-meta {
+  font-size: 0.65rem;
+  color: $ink-faint;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.side-rule {
+  height: 1px;
+  background: $rule;
+  margin: 16px 0;
+}
+
+// Bottom row
+.grid-bottom { grid-area: bottom; }
+
+.bottom-rule-full {
+  height: 1px;
+  background: $rule;
+  margin: 24px 0;
+}
+
+.bottom-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0;
+}
+
+.bottom-card {
+  display: block;
+  padding: 0 20px;
+  cursor: pointer;
+  border-left: 1px solid $rule;
+  transition: transform 0.1s;
+
+  &:first-child { padding-left: 0; border-left: none; }
+  &:active { transform: scale(0.97); }
+}
+
+.bottom-card-img {
+  width: 100%;
+  height: 110px;
+  overflow: hidden;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  background: $paper-warm;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s;
+  }
+
+  &.contain-pad {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+
+    img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 90px;
+    }
+  }
+}
+.bottom-card:hover .bottom-card-img img { transform: scale(1.03); }
+
+.bottom-tags { margin-bottom: 4px; }
+
+.bottom-title {
+  font-family: $font-headline;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 6px;
+  transition: color 0.2s;
+}
+.bottom-card:hover .bottom-title { color: $accent; }
+
+.bottom-preview {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: $ink-light;
+  margin: 0 0 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.bottom-meta {
+  font-size: 0.65rem;
+  color: $ink-faint;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+// Mobile
+@media (max-width: $screen-sm) {
+  .nyt-grid,
+  .nyt-grid:not(:has(.grid-hero-img.has-img)) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .grid-hero-text { border-right: none; padding-right: 0; padding-bottom: 20px; border-bottom: 1px solid $rule; }
+  .grid-hero-img { padding: 16px 0; border-bottom: 1px solid $rule; }
+  .grid-side { border-left: none; padding-left: 0; padding-top: 20px; }
+  .bottom-cards { grid-template-columns: 1fr; }
+  .bottom-card { border-left: none; padding: 14px 0; border-top: 1px solid $rule; &:first-child { border-top: none; padding-top: 0; } }
+}
+
+@media (min-width: 769px) and (max-width: $screen-md) {
+  .nyt-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "hero-text side" "bottom bottom";
+  }
+  .grid-hero-img { display: none; }
+  .grid-side { padding-top: 0; }
+}
+
+// Dark mode
+:host-context(.dark-theme) {
+  .hero-title, .side-title, .bottom-title { color: $dark-ink; }
+  .grid-hero-text:hover .hero-title, .side-item:hover .side-title, .bottom-card:hover .bottom-title { color: $dark-accent; }
+  .hero-preview, .side-preview, .bottom-preview { color: $dark-ink-light; }
+  .hero-meta, .side-meta, .bottom-meta, .img-caption { color: $dark-ink-faint; }
+  .grid-hero-text, .grid-hero-img { border-color: $dark-rule; }
+  .grid-side { border-color: $dark-rule; }
+  .side-rule, .bottom-rule-full { background: $dark-rule; }
+  .bottom-card { border-color: $dark-rule; }
+  .loading-spinner { border-color: $dark-rule; border-top-color: $dark-accent; }
+}

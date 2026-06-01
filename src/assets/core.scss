@@ -1,40 +1,45 @@
-@import 'node_modules/rupture-sass/rupture';
+// Typography
+$font-headline: 'Playfair Display', Georgia, 'Times New Roman', serif;
+$font-body: 'Libre Franklin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
 
-// --------------------------------------------------
-// 1. Spaces
-// --------------------------------------------------
+// Light palette
+$paper: #fff;
+$paper-warm: #f7f5f0;
+$ink: #121212;
+$ink-light: #555;
+$ink-faint: #999;
+$rule: #e2e2e2;
+$rule-dark: #ccc;
+$accent: #0040ff;
 
-$space-xxs    : .4rem;
-$space-xs     : .8rem;
-$space-sm     : 1.6rem;
-$space        : 2.1rem;
-$space-md     : 3.2rem;
-$space-lg     : 4.8rem;
-$space-xlg    : 6.4rem;
-$space-xxlg   : 9.6rem;
+// Dark palette
+$dark-paper: #1a1a1a;
+$dark-paper-warm: #222;
+$dark-ink: #e8e8e8;
+$dark-ink-light: #aaa;
+$dark-ink-faint: #777;
+$dark-rule: #333;
+$dark-accent: #4d8aff;
 
-$header-height    : 6rem;
-$footer-height    : 14rem;
-$actions-height   : 7rem;
-$button-height    : 4rem;
+// Tag colors
+$tag-colors: (
+  "angular": #dd0031,
+  "rxjs": #b7178c,
+  "graphql": #e535ab,
+  "css": #264de4,
+  "testing": #15a356,
+  "trekking": #e67e22,
+  "personal": #8e44ad,
+);
 
-// --------------------------------------------------
-// 2. Media Queries
-// --------------------------------------------------
+// Spacing
+$gutter: 20px;
+$gutter-lg: 30px;
+$max-width: 1200px;
+$article-width: 680px;
 
-$screen-xs      : 360px;   // xExtra small screen / phone
-$screen-sm      : 850px;   // Extra small screen / phone
-$screen-md      : 960px;   // Small screen / tablet
-$screen-lg      : 1280px;  // Medium screen / desktop
-$screen-xlg     : 1920px;  // Extra Large screen / wide desktop
-
-$screen-limited-lg : 1030px;  // Limited to large size
-$screen-limited-md : 680px;   // Limited to medium size
-$screen-limited-sm : 320px;   // Limited to small size
-
-// --------------------------------------------------
-// 3. Font
-// --------------------------------------------------
-$font-sm    : 1em;
-$font-md    : 1.7em;
-$font-lg    : 2.3em;
+// Breakpoints
+$screen-xs: 480px;
+$screen-sm: 768px;
+$screen-md: 1024px;
+$screen-lg: 1280px;
