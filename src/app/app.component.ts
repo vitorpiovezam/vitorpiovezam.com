@@ -1,6 +1,7 @@
 import { LocalStorageService } from './services/local-storage.service';
 import { TranslateService } from './services/translate.service';
-import { Component } from '@angular/core';
+import { PostService } from './services/post.service';
+import { Component, OnInit } from '@angular/core';
 import { faAdjust } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -100,7 +101,7 @@ import { faAdjust } from '@fortawesome/free-solid-svg-icons';
     styleUrls: ['./app.component.scss'],
     standalone: false
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'vitor-js';
   currentYear = new Date().getFullYear();
   darkTheme = this.localStorageService.has('darkTheme');
@@ -110,7 +111,7 @@ export class AppComponent {
   lang = 'en';
   myAge: number;
 
-  allTags = ['all', 'angular', 'rxjs', 'graphql', 'css', 'testing', 'trekking', 'personal'];
+  allTags: string[] = ['all'];
 
   get activeFilterTag(): string {
     return this.activeTag === 'all' ? '' : this.activeTag;
@@ -119,9 +120,23 @@ export class AppComponent {
   constructor(
     private localStorageService: LocalStorageService,
     private translateService: TranslateService,
+    private postService: PostService,
   ) {
     this.applyBackground();
     this.myAge = this.calculateAge();
+  }
+
+  ngOnInit() {
+    this.postService.getLastPosts().subscribe(posts => {
+      const tagSet = new Set<string>();
+      for (const post of posts) {
+        post.tags?.forEach(tag => {
+          const normalized = tag?.trim().toLowerCase();
+          if (normalized) tagSet.add(normalized);
+        });
+      }
+      this.allTags = ['all', ...Array.from(tagSet).sort()];
+    });
   }
 
   toggleTheme() {
