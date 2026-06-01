@@ -369,21 +369,16 @@
     gap: 0;
   }
 
-  // ── Unified mobile card styles ──
-  // Hero: image comes first, then text
-  .grid-hero-text {
-    order: 2;
-    border-right: none;
-    padding-right: 0;
-    padding: 14px 0 20px;
-    border-bottom: 1px solid $rule;
-  }
+  // ── Explicit order: hero img → hero text → side → bottom ──
+  .grid-hero-img  { order: 1; }
+  .grid-hero-text { order: 2; }
+  .grid-side      { order: 3; }
+  .grid-bottom    { order: 4; }
 
+  // Hero image: full width, no padding
   .grid-hero-img {
-    order: 1;
     padding: 0;
     border-bottom: none;
-    margin: 0;
 
     img {
       width: 100%;
@@ -391,18 +386,27 @@
       border-radius: 0;
       object-fit: cover;
     }
+
+    &:not(.has-img) { display: none; }
   }
 
-  // Sub-hero rule hidden on mobile (already separated by border)
+  // Hero text block
+  .grid-hero-text {
+    border-right: none;
+    padding-right: 0;
+    padding: 14px 0 20px;
+    border-bottom: 1px solid $rule;
+  }
+
+  // Sub-hero rule hidden — border-bottom on hero-text handles separation
   .sub-hero-rule { display: none; }
 
-  // Sub-hero becomes its own block
   .sub-hero {
     display: block;
     padding: 14px 0 0;
   }
 
-  // Side column: stacked list with images
+  // Side column: stacked cards
   .grid-side {
     border-left: none;
     padding-left: 0;
@@ -411,13 +415,12 @@
     .side-item {
       padding: 14px 0;
       border-top: 1px solid $rule;
-      border-bottom: none;
     }
 
-    .side-rule { display: none; } // use border-top on items instead
+    .side-rule { display: none; }
   }
 
-  // Show the mobile thumbnails for side posts
+  // Show thumbnails for side posts on mobile
   .side-thumb-mobile {
     display: block;
     width: 100%;
@@ -436,7 +439,7 @@
     &.contain-pad img { object-fit: contain; }
   }
 
-  // Bottom section: stacked list with consistent card spacing
+  // Bottom section: stacked cards
   .bottom-rule-full { display: none; }
   .bottom-cards {
     grid-template-columns: 1fr !important;
@@ -447,10 +450,7 @@
     padding: 14px 0;
     border-top: 1px solid $rule;
 
-    &:first-child {
-      border-top: 1px solid $rule; // keep consistent — no special first-child
-      padding-top: 14px;
-    }
+    &:first-child { border-top: 1px solid $rule; padding-top: 14px; }
   }
 
   .bottom-card-img {
@@ -458,9 +458,7 @@
     border-radius: 2px;
   }
 
-  // Bigger text on mobile for hero
   .hero-title { font-size: 1.5rem; }
-  .hero-preview { display: block; }
 }
 
 @media (min-width: 769px) and (max-width: $screen-md) {
