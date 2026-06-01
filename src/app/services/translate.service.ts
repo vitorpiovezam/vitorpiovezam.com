@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, of, Observable, forkJoin } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { map, catchError, tap, switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class TranslateService {
@@ -22,16 +22,42 @@ export class TranslateService {
     const key = `${from}|${to}|${text}`;
     if (this.cache.has(key)) return of(this.cache.get(key)!);
 
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
-    return this.http.get<any>(url).pipe(
-      map(res => {
-        // Response: [[[translatedText, originalText, ...], ...], ...]
-        const parts: string[] = (res[0] as any[]).map((chunk: any[]) => chunk[0] || '');
-        return parts.join('') || text;
-      }),
+    return this.translateMyMemory(text, from, to).pipe(
+      switchMap(translated =>
+        this.isMyMemoryFailure(translated) ? this.translateGoogle(text, from, to) : of(translated)
+      ),
+      catchError(() => this.translateGoogle(text, from, to)),
       tap(translated => this.cache.set(key, translated)),
       catchError(() => of(text))
     );
+  }
+
+  private translateMyMemory(text: string, from: string, to: string): Observable<string> {
+    return this.http.get<any>(
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`
+    ).pipe(
+      map(res => {
+        const translated = res.responseData?.translatedText || text;
+        if (res.responseStatus === 429 || /MYMEMORY WARNING/i.test(translated)) {
+          throw new Error('MyMemory quota or error');
+        }
+        return translated;
+      })
+    );
+  }
+
+  private translateGoogle(text: string, from: string, to: string): Observable<string> {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(text)}`;
+    return this.http.get<any>(url).pipe(
+      map(res => {
+        const parts: string[] = (res[0] as any[]).map((chunk: any[]) => chunk[0] || '');
+        return parts.join('') || text;
+      })
+    );
+  }
+
+  private isMyMemoryFailure(translated: string): boolean {
+    return /MYMEMORY WARNING/i.test(translated);
   }
 
   translateMarkdown(markdown: string, from: string, to: string): Observable<string> {
