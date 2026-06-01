@@ -109,6 +109,39 @@ export const TAG_COLORS: Record<string, string> = {
 
             <div class="footer-rule"></div>
 
+            <!-- NYT-style READ X COMMENTS button -->
+            <button class="read-comments-btn" (click)="openComments()">
+              READ {{ comments.length > 0 ? comments.length : '' }} COMMENT{{ comments.length !== 1 ? 'S' : '' }}
+            </button>
+
+            <!-- Footer action bar: share / bookmark / comment count -->
+            <div class="footer-actions">
+              <button class="footer-action-pill" (click)="shareArticle()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="3" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Share full article
+              </button>
+              <button class="footer-action-pill" (click)="shareArticle()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+              </button>
+              <button class="footer-action-pill" [class.bookmarked]="isBookmarked" (click)="toggleBookmark()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path [attr.fill]="isBookmarked ? 'currentColor' : 'none'" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </button>
+              <button class="footer-action-pill has-count" (click)="openComments()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                {{ comments.length }}
+              </button>
+            </div>
+
             <span class="share-copied" *ngIf="linkCopied">Link copied!</span>
           </footer>
         </article>
