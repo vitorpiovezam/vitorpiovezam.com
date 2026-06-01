@@ -1,16 +1,7 @@
 import { LocalStorageService } from './services/local-storage.service';
 import { TranslateService } from './services/translate.service';
 import { Component } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { faAdjust } from '@fortawesome/free-solid-svg-icons';
-
-export interface FlickrAlbum {
-  id: string;
-  title: string;
-  shortLabel: string;
-  url: string;
-  playerUrl: string;
-}
 
 @Component({
     selector: 'app-root',
@@ -94,33 +85,7 @@ export interface FlickrAlbum {
               </div>
             </div>
 
-            <div class="about-right">
-              <div class="flickr-panel">
-                <div class="flickr-panel-header">
-                  <h3 class="flickr-album-title">{{ activeFlickrAlbum.title }}</h3>
-                  <a class="flickr-album-link" [href]="activeFlickrAlbum.url" target="_blank" rel="noopener">
-                    View on Flickr ↗
-                  </a>
-                </div>
-                <div class="flickr-embed-wrap">
-                  <iframe
-                    [src]="flickrPlayerUrl"
-                    title="{{ activeFlickrAlbum.title }} — Flickr album"
-                    loading="lazy"
-                    allowfullscreen
-                  ></iframe>
-                </div>
-                <nav class="flickr-album-tabs" *ngIf="flickrAlbums.length > 1" aria-label="Flickr albums">
-                  <button
-                    type="button"
-                    class="flickr-tab"
-                    *ngFor="let album of flickrAlbums"
-                    [class.active]="album.id === activeFlickrAlbum.id"
-                    (click)="selectFlickrAlbum(album)"
-                  >{{ album.shortLabel }}</button>
-                </nav>
-              </div>
-            </div>
+            <div class="about-right" aria-hidden="true"></div>
           </div>
         </section>
 
@@ -147,22 +112,6 @@ export class AppComponent {
 
   allTags = ['all', 'angular', 'rxjs', 'graphql', 'css', 'testing', 'trekking', 'personal'];
 
-  flickrAlbums: FlickrAlbum[] = [
-    {
-      id: 'camboriu',
-      title: '02/2022 — Balneário Camboriú',
-      shortLabel: 'Camboriú',
-      url: 'https://www.flickr.com/photos/190210202@N04/albums/72177720296954807/',
-      playerUrl: 'https://www.flickr.com/photos/190210202@N04/albums/72177720296954807/player/',
-    },
-  ];
-
-  activeFlickrAlbum: FlickrAlbum = this.flickrAlbums[0];
-
-  get flickrPlayerUrl(): SafeResourceUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(this.activeFlickrAlbum.playerUrl);
-  }
-
   get activeFilterTag(): string {
     return this.activeTag === 'all' ? '' : this.activeTag;
   }
@@ -170,7 +119,6 @@ export class AppComponent {
   constructor(
     private localStorageService: LocalStorageService,
     private translateService: TranslateService,
-    private sanitizer: DomSanitizer,
   ) {
     this.applyBackground();
     this.myAge = this.calculateAge();
@@ -196,10 +144,6 @@ export class AppComponent {
     } else {
       this.activeTag = 'all';
     }
-  }
-
-  selectFlickrAlbum(album: FlickrAlbum) {
-    this.activeFlickrAlbum = album;
   }
 
   setLang(lang: string) {

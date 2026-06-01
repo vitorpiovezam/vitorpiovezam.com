@@ -356,19 +356,111 @@
   letter-spacing: 0.04em;
 }
 
-// Mobile
+// Side mobile thumbnail — hidden on desktop
+.side-thumb-mobile { display: none; }
+
+// ── Mobile ────────────────────────────────────────────────────────────────────
 @media (max-width: $screen-sm) {
+  // Reset desktop grid to a single column feed
   .nyt-grid,
   .nyt-grid:not(:has(.grid-hero-img.has-img)) {
     display: flex;
     flex-direction: column;
+    gap: 0;
   }
 
-  .grid-hero-text { border-right: none; padding-right: 0; padding-bottom: 20px; border-bottom: 1px solid $rule; }
-  .grid-hero-img { padding: 16px 0; border-bottom: 1px solid $rule; }
-  .grid-side { border-left: none; padding-left: 0; padding-top: 20px; }
-  .bottom-cards { grid-template-columns: 1fr; }
-  .bottom-card { border-left: none; padding: 14px 0; border-top: 1px solid $rule; &:first-child { border-top: none; padding-top: 0; } }
+  // ── Unified mobile card styles ──
+  // Hero: image comes first, then text
+  .grid-hero-text {
+    order: 2;
+    border-right: none;
+    padding-right: 0;
+    padding: 14px 0 20px;
+    border-bottom: 1px solid $rule;
+  }
+
+  .grid-hero-img {
+    order: 1;
+    padding: 0;
+    border-bottom: none;
+    margin: 0;
+
+    img {
+      width: 100%;
+      height: 200px;
+      border-radius: 0;
+      object-fit: cover;
+    }
+  }
+
+  // Sub-hero rule hidden on mobile (already separated by border)
+  .sub-hero-rule { display: none; }
+
+  // Sub-hero becomes its own block
+  .sub-hero {
+    display: block;
+    padding: 14px 0 0;
+  }
+
+  // Side column: stacked list with images
+  .grid-side {
+    border-left: none;
+    padding-left: 0;
+    padding-top: 0;
+
+    .side-item {
+      padding: 14px 0;
+      border-top: 1px solid $rule;
+      border-bottom: none;
+    }
+
+    .side-rule { display: none; } // use border-top on items instead
+  }
+
+  // Show the mobile thumbnails for side posts
+  .side-thumb-mobile {
+    display: block;
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    border-radius: 2px;
+    margin-bottom: 10px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    &.contain-pad img { object-fit: contain; }
+  }
+
+  // Bottom section: stacked list with consistent card spacing
+  .bottom-rule-full { display: none; }
+  .bottom-cards {
+    grid-template-columns: 1fr !important;
+    gap: 0;
+  }
+  .bottom-card {
+    border-left: none;
+    padding: 14px 0;
+    border-top: 1px solid $rule;
+
+    &:first-child {
+      border-top: 1px solid $rule; // keep consistent — no special first-child
+      padding-top: 14px;
+    }
+  }
+
+  .bottom-card-img {
+    height: 160px;
+    border-radius: 2px;
+  }
+
+  // Bigger text on mobile for hero
+  .hero-title { font-size: 1.5rem; }
+  .hero-preview { display: block; }
 }
 
 @media (min-width: 769px) and (max-width: $screen-md) {

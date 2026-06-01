@@ -24,10 +24,6 @@
   .social-name { color: $dark-ink; }
   .social-sub { color: $dark-ink-faint; }
   .social-icon { color: $dark-accent; }
-  .flickr-album-title { color: $dark-ink; }
-  .flickr-album-link { color: $dark-accent; }
-  .flickr-embed-wrap { border-color: $dark-rule; background: $dark-paper-warm; }
-  .flickr-tab { border-color: $dark-rule; color: $dark-ink-faint; &.active { color: $dark-ink; border-color: $dark-ink; } }
 }
 
 // ── Topbar ─────────────────────────────────────────────────────────────────────
@@ -168,7 +164,6 @@
   background: $paper;
   min-height: 60vh;
   padding: 0 $gutter $gutter-lg;
-  border-top: 3px double $rule;
 
   animation: about-reveal linear both;
   animation-timeline: view();
@@ -288,90 +283,9 @@
   color: $ink-faint;
 }
 
-// Right side: Flickr album embed
+// Right column reserved for future content
 .about-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: stretch;
-  padding-top: 8px;
-}
-
-.flickr-panel {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.flickr-panel-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.flickr-album-title {
-  font-family: $font-headline;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: $ink;
-  margin: 0;
-  line-height: 1.25;
-}
-
-.flickr-album-link {
-  font-family: $font-body;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: $accent;
-  text-decoration: none;
-  white-space: nowrap;
-
-  &:hover { text-decoration: underline; }
-}
-
-.flickr-embed-wrap {
-  width: 100%;
-  border: 1px solid $rule;
-  border-radius: 8px;
-  overflow: hidden;
-  background: $paper-warm;
-  aspect-ratio: 4 / 3;
-
-  iframe {
-    display: block;
-    width: 100%;
-    height: 100%;
-    min-height: 360px;
-    border: 0;
-  }
-}
-
-.flickr-album-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.flickr-tab {
-  font-family: $font-body;
-  font-size: 0.68rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 5px 12px;
-  border: 1px solid $rule;
-  border-radius: 20px;
-  background: none;
-  color: $ink-faint;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, transform 0.1s;
-
-  &:hover { color: $ink; border-color: $ink; }
-  &:active { transform: scale(0.96); }
-  &.active { color: $ink; border-color: $ink; background: $paper-warm; }
+  min-height: 1px;
 }
 
 // ── Footer ─────────────────────────────────────────────────────────────────────
@@ -404,11 +318,7 @@
   }
 
   .about-right {
-    padding-top: 32px;
-  }
-
-  .flickr-embed-wrap iframe {
-    min-height: 280px;
+    display: none;
   }
 
   .about-photo img {

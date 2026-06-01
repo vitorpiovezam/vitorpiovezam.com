@@ -56,6 +56,12 @@ const TAG_COLORS: Record<string, string> = {
       <!-- Side column -->
       <div class="grid-side">
         <a class="side-item" *ngFor="let post of sidePosts; let i = index" (click)="selectPost(post.slug)">
+          <!-- thumbnail: hidden on desktop, shown on mobile -->
+          <div class="side-thumb-mobile" *ngIf="post.firstImage" [class.contain-pad]="imageFits[post.firstImage]?.pad">
+            <img [src]="post.firstImage" [alt]="post.title" loading="lazy"
+                 [style.object-fit]="imageFits[post.firstImage]?.fit || 'cover'"
+                 (load)="onImageLoad($event, post.firstImage)" />
+          </div>
           <div class="side-tags">
             <span class="tag" *ngFor="let tag of post.tags" [style.background]="tagColor(tag)">{{ tag }}</span>
           </div>
