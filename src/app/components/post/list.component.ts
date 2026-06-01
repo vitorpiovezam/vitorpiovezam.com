@@ -56,11 +56,6 @@ const TAG_COLORS: Record<string, string> = {
       <!-- Side column -->
       <div class="grid-side">
         <a class="side-item" *ngFor="let post of sidePosts; let i = index" (click)="selectPost(post.slug)">
-          <div class="side-thumb" *ngIf="post.firstImage">
-            <img [src]="post.firstImage" [alt]="post.title" loading="lazy"
-                 [style.object-fit]="imageFits[post.firstImage]?.fit || 'cover'"
-                 (load)="onImageLoad($event, post.firstImage)" />
-          </div>
           <div class="side-tags">
             <span class="tag" *ngFor="let tag of post.tags" [style.background]="tagColor(tag)">{{ tag }}</span>
           </div>
@@ -168,9 +163,8 @@ export class PostListComponent implements OnInit, OnChanges {
 
     this.hero = this.displayPosts[0];
     this.subHero = total > 1 ? this.displayPosts[1] : null;
-    // Side always gets exactly 2 posts (with images they'd be too tall with 3)
-    this.sidePosts = this.displayPosts.slice(2, 4);
-    this.bottomPosts = this.displayPosts.slice(4);
+    this.sidePosts = this.displayPosts.slice(2, 5);
+    this.bottomPosts = this.displayPosts.slice(5);
     this.gridLayout = total <= 2 ? 'a' : total <= 4 ? 'b' : 'c';
   }
 

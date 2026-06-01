@@ -71,8 +71,7 @@
 .nyt-grid {
   display: grid;
   gap: 0;
-  // left text | center img | right side — side narrower since it has images now
-  grid-template-columns: 1.3fr 0.9fr 0.85fr;
+  grid-template-columns: 1.2fr 1fr 1fr;
   grid-template-areas:
     "hero-text hero-img side"
     "bottom    bottom   bottom";
@@ -215,7 +214,7 @@
 .side-item {
   display: block;
   cursor: pointer;
-  padding-bottom: 12px;
+  padding-bottom: 16px;
   &:active { opacity: 0.75; }
 }
 
@@ -250,12 +249,12 @@
 .side-item:hover .side-title { color: $accent; }
 
 .side-preview {
-  font-size: 0.8rem;
-  line-height: 1.4;
+  font-size: 0.82rem;
+  line-height: 1.45;
   color: $ink-light;
   margin: 0 0 6px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
