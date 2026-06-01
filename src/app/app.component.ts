@@ -141,13 +141,6 @@ export class AppComponent {
 
   flickrAlbums: FlickrAlbum[] = [
     {
-      id: 'barra',
-      title: '09/2020 — Barra da Tijuca',
-      shortLabel: 'Barra da Tijuca',
-      url: 'https://www.flickr.com/photos/190210202@N04/albums/72177720296956254/',
-      playerUrl: 'https://www.flickr.com/photos/190210202@N04/albums/72177720296956254/player/',
-    },
-    {
       id: 'camboriu',
       title: '02/2022 — Balneário Camboriú',
       shortLabel: 'Camboriú',

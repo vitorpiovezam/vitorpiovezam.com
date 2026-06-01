@@ -1,5 +1,5 @@
 import { Router, NavigationEnd } from '@angular/router';
-import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges, HostListener, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges, HostListener } from '@angular/core';
 import { Post } from './list.component';
 import { PostService, Comment } from 'src/app/services/post.service';
 import { TranslateService } from 'src/app/services/translate.service';
@@ -24,15 +24,15 @@ export const TAG_COLORS: Record<string, string> = {
           <div class="progress-bar"></div>
         </div>
 
-        <button class="back-btn-floating" *ngIf="!loading && post" (click)="closePost()" aria-label="Back">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-        </button>
-
-        <!-- Sticky toolbar — only after inline actions scroll out of view -->
-        <div class="article-toolbar pinned" *ngIf="!loading && post && toolbarPinned">
+        <!-- Unified sticky navbar: back arrow + actions — always visible on scroll -->
+        <div class="article-navbar" *ngIf="!loading && post">
+          <button class="nav-back-btn" (click)="closePost()" aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <div class="nav-spacer"></div>
           <ng-container *ngTemplateOutlet="actionsToolbar"></ng-container>
         </div>
 
@@ -86,11 +86,6 @@ export const TAG_COLORS: Record<string, string> = {
             <div class="article-rule"></div>
           </header>
 
-          <!-- NYT-style actions below header, before body -->
-          <div class="article-actions-inline" #actionsAnchor>
-            <ng-container *ngTemplateOutlet="actionsToolbar"></ng-container>
-          </div>
-
           <section class="article-body" [class.speaking]="listening">
             <markdown [data]="displayContent || post.post" ngPreserveWhitespaces></markdown>
           </section>
@@ -114,9 +109,6 @@ export const TAG_COLORS: Record<string, string> = {
 
             <div class="footer-rule"></div>
 
-            <div class="article-actions-inline footer-actions">
-              <ng-container *ngTemplateOutlet="actionsToolbar"></ng-container>
-            </div>
             <span class="share-copied" *ngIf="linkCopied">Link copied!</span>
           </footer>
         </article>
@@ -221,9 +213,8 @@ export const TAG_COLORS: Record<string, string> = {
     styleUrls: ['./view.component.scss'],
     standalone: false
 })
-export class PostViewComponent implements OnInit, OnDestroy, OnChanges, AfterViewChecked {
+export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
   @Input() lang = 'en';
-  @ViewChild('actionsAnchor') actionsAnchor?: ElementRef<HTMLElement>;
 
   post: Post;
   loading = false;
@@ -238,7 +229,6 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges, AfterVie
   linkCopied = false;
   commentsOpen = false;
   listening = false;
-  toolbarPinned = false;
 
   comments: Comment[] = [];
   loadingComments = false;
@@ -250,10 +240,8 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges, AfterVie
   private originalOverflow = '';
   private bookmarkKey = '';
   private utterance: SpeechSynthesisUtterance | null = null;
-  private actionsObserver: IntersectionObserver | null = null;
   private speechBlocks: { el: HTMLElement; start: number; end: number }[] = [];
   private speechPlainText = '';
-  private observerSetup = false;
 
   constructor(
     private postService: PostService,
@@ -280,13 +268,8 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
   }
 
-  ngAfterViewChecked(): void {
-    this.setupActionsObserver();
-  }
-
   ngOnDestroy(): void {
     this.stopSpeech();
-    this.disconnectActionsObserver();
     this.restoreScroll();
   }
 
@@ -297,11 +280,11 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges, AfterVie
   }
 
   tagColor(tag: string): string {
-    return TAG_COLORS[tag?.toLowerCase()] || '#0040ff';
+    return TAG_COLORS[tag?.toLowerCase()] || '#5a85d4';
   }
 
   avatarColor(name: string): string {
-    const colors = ['#dd0031','#b7178c','#e535ab','#264de4','#15a356','#e67e22','#8e44ad','#0040ff'];
+    const colors = ['#dd0031','#b7178c','#e535ab','#264de4','#15a356','#e67e22','#8e44ad','#5a85d4'];
     let h = 0;
     for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
     return colors[Math.abs(h) % colors.length];
@@ -326,8 +309,6 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges, AfterVie
       this.isBookmarked = !!localStorage.getItem(this.bookmarkKey);
 
       this.listenDuration = this.calcListenDuration(post);
-      this.observerSetup = false;
-      this.toolbarPinned = false;
 
       if (this.lang !== 'en') this.translateContent();
       this.loadRelated();
@@ -339,10 +320,8 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
   closePost() {
     this.stopSpeech();
-    this.disconnectActionsObserver();
     this.isOpen = false;
     this.commentsOpen = false;
-    this.toolbarPinned = false;
     setTimeout(() => {
       this.post = null;
       this.comments = [];
@@ -489,24 +468,6 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     document.querySelectorAll('.speech-active').forEach(el => el.classList.remove('speech-active'));
   }
 
-  private setupActionsObserver() {
-    if (this.observerSetup || !this.actionsAnchor?.nativeElement || !this.post) return;
-    const modal = document.querySelector('.modal');
-    if (!modal) return;
-    this.observerSetup = true;
-    this.actionsObserver = new IntersectionObserver(
-      ([entry]) => { this.toolbarPinned = !entry.isIntersecting; },
-      { root: modal, threshold: 0, rootMargin: '-56px 0px 0px 0px' }
-    );
-    this.actionsObserver.observe(this.actionsAnchor.nativeElement);
-  }
-
-  private disconnectActionsObserver() {
-    this.actionsObserver?.disconnect();
-    this.actionsObserver = null;
-    this.observerSetup = false;
-  }
-
   private calcListenDuration(post: Post): string {
     const words = this.stripForSpeech(post?.post || '').split(/\s+/).filter(Boolean).length;
     const totalSec = Math.max(60, Math.round((words / 155) * 60));
@@ -608,10 +569,8 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
   private close() {
     this.stopSpeech();
-    this.disconnectActionsObserver();
     this.isOpen = false;
     this.post = null;
-    this.toolbarPinned = false;
     this.restoreScroll();
   }
 

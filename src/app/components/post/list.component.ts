@@ -216,7 +216,7 @@ export class PostListComponent implements OnInit, OnChanges {
   }
 
   tagColor(tag: string): string {
-    return TAG_COLORS[tag.toLowerCase()] || '#0040ff';
+    return TAG_COLORS[tag.toLowerCase()] || '#5a85d4';
   }
 
   readingTime(post: Post): number {

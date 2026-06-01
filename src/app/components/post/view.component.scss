@@ -25,10 +25,10 @@
 // ── Progress ──────────────────────────────────────────────────────────────────
 .progress-track {
   position: sticky;
-  top: 0;
+  top: 52px;
   width: 100%;
   height: 3px;
-  z-index: 110;
+  z-index: 119;
 }
 
 .progress-bar {
@@ -46,54 +46,40 @@
   to   { transform: scaleX(1); }
 }
 
-// ── Floating back ─────────────────────────────────────────────────────────────
-.back-btn-floating {
+// ── Unified sticky article navbar ─────────────────────────────────────────────
+.article-navbar {
   position: sticky;
-  top: 16px;
-  left: 16px;
+  top: 0;
   z-index: 120;
-  width: 38px;
-  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  height: 52px;
+  background: rgba($paper, 0.97);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid $rule;
+}
+
+.nav-back-btn {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 1px solid $rule;
-  background: $paper;
+  background: transparent;
   color: $ink;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin: 16px 0 -38px 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: border-color 0.2s, transform 0.1s;
+  transition: border-color 0.2s, color 0.2s, transform 0.1s;
 
   &:hover { border-color: $accent; color: $accent; }
   &:active { transform: scale(0.9); }
 }
 
-// ── Pinned toolbar (after scroll) ─────────────────────────────────────────────
-.article-toolbar.pinned {
-  position: sticky;
-  top: 3px;
-  z-index: 115;
-  background: rgba($paper, 0.96);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid $rule;
-  padding: 10px 0;
-  max-width: $article-width;
-  margin: 0 auto;
-}
-
-// ── NYT-style actions bar (inline + footer) ───────────────────────────────────
-.article-actions-inline {
-  padding: 16px 0 20px;
-  border-bottom: 1px solid $rule;
-
-  &.footer-actions {
-    border-bottom: none;
-    border-top: none;
-    padding: 20px 0 0;
-  }
-}
+.nav-spacer { flex: 1; }
 
 .actions-bar {
   display: flex;
@@ -235,13 +221,17 @@
   color: $ink;
 
   ::ng-deep .speech-block {
-    transition: background 0.25s ease;
+    transition: background 0.2s ease;
     border-radius: 2px;
+    display: inline;
   }
 
   ::ng-deep .speech-active {
-    background: rgba(0, 64, 255, 0.08);
+    background: #ffe033;
+    color: #111;
     box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    border-radius: 2px;
   }
 
   ::ng-deep {
@@ -580,14 +570,13 @@
 
 // ── Dark mode ──────────────────────────────────────────────────────────────────
 :host-context(.dark-theme) {
-  .modal, .comments-panel, .comments-panel-header, .toolbar-icon-btn, .back-btn-floating { background: $dark-paper; }
-  .article-toolbar.pinned { background: rgba($dark-paper, 0.96); border-color: $dark-rule; }
-  .back-btn-floating, .listen-play-icon, .toolbar-icon-btn { border-color: $dark-rule; color: $dark-ink; }
+  .modal, .comments-panel, .comments-panel-header, .toolbar-icon-btn { background: $dark-paper; }
+  .article-navbar { background: rgba($dark-paper, 0.97); border-color: $dark-rule; }
+  .nav-back-btn, .listen-play-icon, .toolbar-icon-btn { border-color: $dark-rule; color: $dark-ink; }
   .toolbar-btn.listen-btn { color: $dark-ink; &.listening { color: $dark-accent; } }
-  .toolbar-icon-btn:hover, .back-btn-floating:hover { border-color: $dark-ink; }
+  .toolbar-icon-btn:hover, .nav-back-btn:hover { border-color: $dark-ink; }
   .toolbar-icon-btn.bookmarked { color: $dark-accent; border-color: $dark-accent; background: transparent; }
-  .article-actions-inline { border-color: $dark-rule; }
-  .article-body ::ng-deep .speech-active { background: rgba(77, 138, 255, 0.12); }
+  .article-body ::ng-deep .speech-active { background: #ffe033; color: #111; }
   .article-title { color: $dark-ink; }
   .article-meta { color: $dark-ink-faint; }
   .article-rule, .footer-rule, .comment-rule, .sort-bar { border-color: $dark-rule; }
@@ -605,7 +594,7 @@
   .comment-input, .comment-textarea { background: $dark-paper-warm; border-color: $dark-rule; color: $dark-ink; &:focus { border-color: $dark-accent; } }
   .comment-submit { background: $dark-ink; color: $dark-paper; }
   .comment-cancel { border-color: $dark-rule; color: $dark-ink-faint; &:hover { color: $dark-ink; border-color: $dark-ink; } }
-  .comment-pending { color: $dark-accent; background: rgba(77,138,255,0.08); border-color: rgba(77,138,255,0.2); }
+  .comment-pending { color: $dark-accent; background: rgba(138,176,232,0.08); border-color: rgba(138,176,232,0.2); }
   .comment-author { color: $dark-ink; }
   .comment-time, .comment-ellipsis { color: $dark-ink-faint; }
   .comment-text { color: $dark-ink; }
