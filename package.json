@@ -5,8 +5,8 @@
     "ng": "ng",
     "start:dev": "ng serve --configuration=dev",
     "start": "ng serve",
-    "build": "ng build",
-    "deploy": "ng build; aws s3 sync ./dist/vitor-js/browser s3://vitor.js && aws cloudfront create-invalidation --distribution-id E3TXC9UE1XA6EH --paths \"/*\" --no-cli-pager --query \"Invalidation.{Id:Id,Status:Status,CreateTime:CreateTime}\" --output table",
+    "build": "ng build --configuration production",
+    "deploy": "ng build --configuration production && aws s3 sync ./dist/vitor-js/browser s3://vitor.js --profile thali && aws cloudfront create-invalidation --distribution-id E3TXC9UE1XA6EH --paths \"/*\" --profile thali --query \"Invalidation.{Id:Id,Status:Status}\" --output table",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
