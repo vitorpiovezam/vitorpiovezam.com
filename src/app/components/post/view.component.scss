@@ -226,6 +226,8 @@
   max-width: $article-width;
   margin: 0 auto;
   padding: 32px $gutter 60px;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .chip {

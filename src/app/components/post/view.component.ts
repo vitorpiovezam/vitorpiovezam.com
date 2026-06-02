@@ -427,7 +427,7 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
     this.utterance = new SpeechSynthesisUtterance(this.speechPlainText);
     const speechLang = this.lang === 'pt' ? 'pt-BR' : 'en-US';
     this.utterance.lang = speechLang;
-    this.utterance.rate = 1.02;
+    this.utterance.rate = 1.2;
     this.utterance.pitch = 1.05;
     this.utterance.onboundary = (ev: SpeechSynthesisEvent) => {
       if (ev.charIndex >= 0) this.highlightAtChar(ev.charIndex);
