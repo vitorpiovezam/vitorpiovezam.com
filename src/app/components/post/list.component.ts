@@ -119,7 +119,6 @@ export class PostListComponent implements OnInit, OnChanges {
   @Input() filterTag = '';
   @Input() filterSaved = false;
   @Input() lang = 'en';
-
   posts: Post[] = [];
   displayPosts: Post[] = [];
   hero: Post;

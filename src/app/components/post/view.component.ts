@@ -52,16 +52,17 @@ export const TAG_COLORS: Record<string, string> = {
 
         <ng-template #actionsToolbar>
           <div class="actions-bar">
-            <button class="toolbar-btn listen-btn" (click)="toggleListen()" [class.listening]="listening">
-              <span class="listen-play-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                  <polygon *ngIf="!listening" points="5 3 19 12 5 21 5 3"></polygon>
+            <div class="listen-group">
+              <button type="button" class="toolbar-icon-btn listen-btn" (click)="toggleListen()" [class.listening]="listening"
+                [attr.aria-label]="listening ? 'Stop listening' : 'Listen to article'">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                  <polygon *ngIf="!listening" points="8 5 19 12 8 19"></polygon>
                   <rect *ngIf="listening" x="6" y="5" width="4" height="14"></rect>
                   <rect *ngIf="listening" x="14" y="5" width="4" height="14"></rect>
                 </svg>
-              </span>
+              </button>
               <span class="listen-label">{{ listening ? 'Stop' : 'Listen · ' + listenDuration }}</span>
-            </button>
+            </div>
             <div class="actions-bar-right">
               <button class="toolbar-icon-btn" [class.bookmarked]="isBookmarked" (click)="toggleBookmark()" title="{{ isBookmarked ? 'Saved' : 'Save' }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -130,16 +131,10 @@ export const TAG_COLORS: Record<string, string> = {
             <div class="footer-actions">
               <button class="footer-action-pill" (click)="shareArticle()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="9" y="3" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                Share full article
-              </button>
-              <button class="footer-action-pill" (click)="shareArticle()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle>
                   <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
                 </svg>
+                Share full article
               </button>
               <button class="footer-action-pill" [class.bookmarked]="isBookmarked" (click)="toggleBookmark()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -404,15 +399,34 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   // ── Share ─────────────────────────────────────────────────────────────────
-  shareArticle() {
+  async shareArticle() {
     const url = window.location.href;
-    if (navigator.share) {
-      navigator.share({ title: this.post.title, url }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(url).then(() => {
-        this.linkCopied = true;
-        setTimeout(() => this.linkCopied = false, 2500);
-      });
+    const title = this.displayTitle || this.post?.title || document.title;
+    const data: ShareData = { title, url };
+
+    try {
+      if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
+        await navigator.share(data);
+        return;
+      }
+    } catch (err) {
+      if ((err as Error).name === 'AbortError') return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      this.linkCopied = true;
+      setTimeout(() => this.linkCopied = false, 2500);
+    } catch {
+      // Fallback when clipboard API is blocked
+      const input = document.createElement('input');
+      input.value = url;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      this.linkCopied = true;
+      setTimeout(() => this.linkCopied = false, 2500);
     }
   }
 

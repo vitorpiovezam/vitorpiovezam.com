@@ -96,36 +96,23 @@
   margin-left: auto;
 }
 
-.toolbar-btn.listen-btn {
+.listen-group {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 0;
-  border: none;
-  background: none;
-  color: $ink;
+  gap: 8px;
+}
+
+.listen-btn.listening {
+  color: $accent;
+  border-color: $accent;
+}
+
+.listen-label {
+  white-space: nowrap;
   font-family: $font-body;
   font-size: 0.82rem;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.1s;
-
-  &:hover { opacity: 0.75; }
-  &:active { transform: scale(0.97); }
-  &.listening { color: $accent; }
+  color: $ink;
 }
-
-.listen-play-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid $rule;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.listen-label { white-space: nowrap; }
 
 .toolbar-icon-btn {
   display: inline-flex;
@@ -842,8 +829,9 @@
     background-size: 200% 100%;
   }
   .article-navbar { background: rgba($dark-paper, 0.97); border-color: $dark-rule; }
-  .nav-back-btn, .listen-play-icon, .toolbar-icon-btn { border-color: $dark-rule; color: $dark-ink; }
-  .toolbar-btn.listen-btn { color: $dark-ink; &.listening { color: $dark-accent; } }
+  .nav-back-btn, .toolbar-icon-btn { border-color: $dark-rule; color: $dark-ink; }
+  .listen-label { color: $dark-ink; }
+  .listen-btn.listening { color: $dark-accent; border-color: $dark-accent; }
   .toolbar-icon-btn:hover, .nav-back-btn:hover { border-color: $dark-ink; }
   .toolbar-icon-btn.bookmarked { color: $dark-accent; border-color: $dark-accent; background: transparent; }
   .article-body ::ng-deep .speech-active { background: #ffe033; color: #111; }
@@ -906,22 +894,7 @@
 
 @media (max-width: $screen-sm) {
   .listen-label { display: none; }
-
-  // Normalize listen button size on mobile to match icon buttons
-  .toolbar-btn.listen-btn {
-    padding: 0;
-    width: 36px;
-    height: 36px;
-    border: 1px solid $rule;
-    border-radius: 50%;
-    justify-content: center;
-  }
-
-  .listen-play-icon {
-    border: none;
-    width: auto;
-    height: auto;
-  }
+  .listen-group { gap: 0; }
 
   .comments-panel { width: 100%; }
 }
