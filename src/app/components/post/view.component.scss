@@ -167,6 +167,60 @@
   line-height: 1;
 }
 
+// ── Article loading (shimmer) — same margins as loaded article ────────────────
+.article-loading {
+  width: 100%;
+}
+
+.article-loading-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 16px;
+  background: rgba($paper, 0.97);
+  border-bottom: 1px solid $rule;
+}
+
+.article-loading-body {
+  max-width: $article-width;
+  margin: 0 auto;
+  padding: 32px $gutter 60px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sk-nav-circle,
+.sk-nav-pill {
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: sk-shimmer 1.4s ease-in-out infinite;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sk-nav-circle {
+  width: 36px;
+  height: 36px;
+}
+
+.sk-nav-circle.sk-sm {
+  width: 36px;
+  height: 36px;
+}
+
+.sk-nav-spacer {
+  flex: 1;
+}
+
+@keyframes sk-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 // ── Article ───────────────────────────────────────────────────────────────────
 .article {
   max-width: $article-width;
@@ -780,6 +834,11 @@
 // ── Dark mode ──────────────────────────────────────────────────────────────────
 :host-context(.dark-theme) {
   .modal, .comments-panel, .comments-panel-header, .toolbar-icon-btn { background: $dark-paper; }
+  .article-loading-navbar { background: rgba($dark-paper, 0.97); border-color: $dark-rule; }
+  .sk-nav-circle {
+    background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
+    background-size: 200% 100%;
+  }
   .article-navbar { background: rgba($dark-paper, 0.97); border-color: $dark-rule; }
   .nav-back-btn, .listen-play-icon, .toolbar-icon-btn { border-color: $dark-rule; color: $dark-ink; }
   .toolbar-btn.listen-btn { color: $dark-ink; &.listening { color: $dark-accent; } }

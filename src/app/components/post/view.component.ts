@@ -37,7 +37,18 @@ export const TAG_COLORS: Record<string, string> = {
           <ng-container *ngTemplateOutlet="actionsToolbar"></ng-container>
         </div>
 
-        <app-loading *ngIf="loading"></app-loading>
+        <div class="article-loading" *ngIf="loading">
+          <div class="article-loading-navbar">
+            <div class="sk-nav-circle"></div>
+            <div class="sk-nav-spacer"></div>
+            <div class="sk-nav-circle sk-sm"></div>
+            <div class="sk-nav-circle sk-sm"></div>
+            <div class="sk-nav-circle sk-sm"></div>
+          </div>
+          <div class="article-loading-body">
+            <app-loading></app-loading>
+          </div>
+        </div>
 
         <ng-template #actionsToolbar>
           <div class="actions-bar">

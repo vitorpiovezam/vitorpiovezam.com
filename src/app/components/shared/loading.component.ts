@@ -11,14 +11,21 @@ import { Component } from '@angular/core';
       <div class="sk-rule"></div>
       <div class="sk-line sk-body"></div>
       <div class="sk-line sk-body"></div>
+      <div class="sk-line sk-body"></div>
+      <div class="sk-line sk-body-short"></div>
+      <div class="sk-line sk-body"></div>
       <div class="sk-line sk-body-short"></div>
     </div>
     `,
     styles: [`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .skeleton {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 20px 0;
+      width: 100%;
+      padding: 0;
     }
 
     .sk-line {
