@@ -14,6 +14,15 @@ import { Component } from '@angular/core';
       <div class="sk-line sk-body"></div>
       <div class="sk-line sk-body-short"></div>
       <div class="sk-line sk-body"></div>
+      <div class="sk-line sk-body"></div>
+      <div class="sk-line sk-body-short"></div>
+      <div class="sk-line sk-body"></div>
+      <div class="sk-line sk-body"></div>
+      <div class="sk-line sk-body-short"></div>
+      <div class="sk-line sk-body"></div>
+      <div class="sk-line sk-body"></div>
+      <div class="sk-line sk-body-short"></div>
+      <div class="sk-line sk-body"></div>
       <div class="sk-line sk-body-short"></div>
     </div>
     `,

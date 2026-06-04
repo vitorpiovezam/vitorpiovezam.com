@@ -71,7 +71,7 @@
 .nyt-grid {
   display: grid;
   gap: 0;
-  grid-template-columns: 1.2fr 1fr 1fr;
+  grid-template-columns: 1.15fr 1fr 1fr;
   grid-template-areas:
     "hero-text hero-img side"
     "bottom    bottom   bottom";
@@ -80,7 +80,7 @@
 
 // When no hero image: collapse center column
 .nyt-grid:not(:has(.grid-hero-img.has-img)) {
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
   grid-template-areas:
     "hero-text side"
     "bottom    bottom";
@@ -89,7 +89,7 @@
 // Hero left text
 .grid-hero-text {
   grid-area: hero-text;
-  padding-right: 24px;
+  padding-right: 20px;
   border-right: 1px solid $rule;
   display: flex;
   flex-direction: column;
@@ -273,25 +273,24 @@
   margin: 16px 0;
 }
 
-// Bottom row
-.grid-bottom { grid-area: bottom; }
+// Bottom row — same column tracks as the hero row (subgrid)
+.grid-bottom {
+  grid-area: bottom;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
 
 .bottom-rule-full {
+  grid-column: 1 / -1;
   height: 1px;
   background: $rule;
   margin: 24px 0;
 }
 
 .bottom-cards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
+  display: contents;
 }
-
-// When few cards, don't let them fill all 4 columns and stretch
-.bottom-cards:has(.bottom-card:nth-child(1):last-child) { grid-template-columns: repeat(1, minmax(0, 280px)); }
-.bottom-cards:has(.bottom-card:nth-child(2):last-child) { grid-template-columns: repeat(2, minmax(0, 300px)); }
-.bottom-cards:has(.bottom-card:nth-child(3):last-child) { grid-template-columns: repeat(3, 1fr); }
 
 .bottom-card {
   display: block;

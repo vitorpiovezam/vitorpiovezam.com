@@ -54,14 +54,14 @@ export const TAG_COLORS: Record<string, string> = {
           <div class="actions-bar">
             <div class="listen-group">
               <button type="button" class="toolbar-icon-btn listen-btn" (click)="toggleListen()" [class.listening]="listening"
-                [attr.aria-label]="listening ? 'Stop listening' : 'Listen to article'">
+                [attr.aria-label]="listenAriaLabel">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                   <polygon *ngIf="!listening" points="8 5 19 12 8 19"></polygon>
                   <rect *ngIf="listening" x="6" y="5" width="4" height="14"></rect>
                   <rect *ngIf="listening" x="14" y="5" width="4" height="14"></rect>
                 </svg>
               </button>
-              <span class="listen-label">{{ listening ? 'Stop' : 'Listen · ' + listenDuration }}</span>
+              <span class="listen-label">{{ listenLabel }}</span>
             </div>
             <div class="actions-bar-right">
               <button class="toolbar-icon-btn" [class.bookmarked]="isBookmarked" (click)="toggleBookmark()" title="{{ isBookmarked ? 'Saved' : 'Save' }}">
@@ -320,6 +320,21 @@ export class PostViewComponent implements OnInit, OnDestroy, OnChanges {
   onEsc() {
     if (this.commentsOpen) { this.closeComments(); return; }
     if (this.isOpen) this.closePost();
+  }
+
+  get listenLabel(): string {
+    if (this.listening) {
+      return this.lang === 'pt' ? 'Parar' : 'Stop';
+    }
+    const verb = this.lang === 'pt' ? 'Ouvir' : 'Listen';
+    return `${verb} · ${this.listenDuration}`;
+  }
+
+  get listenAriaLabel(): string {
+    if (this.listening) {
+      return this.lang === 'pt' ? 'Parar de ouvir' : 'Stop listening';
+    }
+    return this.lang === 'pt' ? 'Ouvir artigo' : 'Listen to article';
   }
 
   tagColor(tag: string): string {
