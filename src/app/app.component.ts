@@ -3,6 +3,7 @@ import { TranslateService } from './services/translate.service';
 import { PostService } from './services/post.service';
 import { Component, OnInit } from '@angular/core';
 import { faAdjust } from '@fortawesome/free-solid-svg-icons';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -46,12 +47,12 @@ import { faAdjust } from '@fortawesome/free-solid-svg-icons';
           <section class="about-section" id="about">
           <div class="about-grid">
             <div class="about-left">
-              <h2 class="about-title">About me</h2>
+              <h2 class="about-title">{{ aboutTitle }}</h2>
               <div class="about-text">
-                <p>My name is Vitor, I'm {{ myAge }} year's old.</p>
-                <p>I like to ride my bike, listen to alternative music, watch documentaries and drink orange juice.</p>
-                <p>My passion is development. Optimize processes and shortening paths is an art that programming makes possible.</p>
-                <p>So in recent years I have developed my skills in logic, typescript and cloud computing. Acting as Fullstack Angular/Node, currently as Senior Software Engineer at <a target="_blank" href="https://sciensa.ai/pt">Sciensa AI</a>.</p>
+                <p>{{ aboutP1 }}</p>
+                <p>{{ aboutP2 }}</p>
+                <p>{{ aboutP3 }}</p>
+                <p>{{ aboutP4Lead }}<a target="_blank" href="https://sciensa.ai/pt">Sciensa AI</a>{{ aboutP4End }}</p>
               </div>
 
               <div class="about-photo">
@@ -60,27 +61,27 @@ import { faAdjust } from '@fortawesome/free-solid-svg-icons';
 
               <div class="about-social">
                 <a href="https://github.com/vitorpiovezam" target="_blank" rel="noopener" class="social-link"
-                  aria-label="GitHub — See my projects">
+                  [attr.aria-label]="githubAria">
                   <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                   <span class="social-tooltip" role="tooltip">
                     <span class="social-name">GitHub</span>
-                    <span class="social-sub">See my projects</span>
+                    <span class="social-sub">{{ githubSub }}</span>
                   </span>
                 </a>
                 <a href="https://www.linkedin.com/in/vitorpiovezam/" target="_blank" rel="noopener" class="social-link"
-                  aria-label="LinkedIn — Follow my career">
+                  [attr.aria-label]="linkedinAria">
                   <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                   <span class="social-tooltip" role="tooltip">
                     <span class="social-name">LinkedIn</span>
-                    <span class="social-sub">Follow my career</span>
+                    <span class="social-sub">{{ linkedinSub }}</span>
                   </span>
                 </a>
                 <a href="https://www.flickr.com/people/190210202@N04/" target="_blank" rel="noopener" class="social-link"
-                  aria-label="Flickr — See my photos with original quality">
+                  [attr.aria-label]="flickrAria">
                   <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M0 12a6 6 0 1012 0A6 6 0 100 12zm12 0a6 6 0 1012 0 6 6 0 10-12 0z"/></svg>
                   <span class="social-tooltip" role="tooltip">
                     <span class="social-name">Flickr</span>
-                    <span class="social-sub">See my photos with original quality</span>
+                    <span class="social-sub">{{ flickrSub }}</span>
                   </span>
                 </a>
               </div>
@@ -114,6 +115,21 @@ export class AppComponent implements OnInit {
 
   allTags: string[] = ['all'];
 
+  aboutTitle = 'About me';
+  aboutP1 = '';
+  aboutP2 = '';
+  aboutP3 = '';
+  aboutP4Lead = '';
+  aboutP4End = '.';
+  githubSub = 'See my projects';
+  linkedinSub = 'Follow my career';
+  flickrSub = 'See my photos with original quality';
+  githubAria = 'GitHub — See my projects';
+  linkedinAria = 'LinkedIn — Follow my career';
+  flickrAria = 'Flickr — See my photos with original quality';
+
+  private translatingAbout = false;
+
   get activeFilterTag(): string {
     return this.activeTag === 'all' ? '' : this.activeTag;
   }
@@ -125,6 +141,7 @@ export class AppComponent implements OnInit {
   ) {
     this.applyBackground();
     this.myAge = this.calculateAge();
+    this.resetAboutCopy();
   }
 
   ngOnInit() {
@@ -165,6 +182,77 @@ export class AppComponent implements OnInit {
   setLang(lang: string) {
     this.lang = lang;
     this.translateService.setLang(lang);
+    this.translateAbout();
+  }
+
+  private resetAboutCopy() {
+    this.aboutTitle = 'About me';
+    this.aboutP1 = `My name is Vitor, I'm ${this.myAge} year's old.`;
+    this.aboutP2 = 'I like to ride my bike, listen to alternative music, watch documentaries and drink orange juice.';
+    this.aboutP3 = 'My passion is development. Optimize processes and shortening paths is an art that programming makes possible.';
+    this.aboutP4Lead = 'So in recent years I have developed my skills in logic, typescript and cloud computing. Acting as Fullstack Angular/Node, currently as Senior Software Engineer at ';
+    this.aboutP4End = '.';
+    this.githubSub = 'See my projects';
+    this.linkedinSub = 'Follow my career';
+    this.flickrSub = 'See my photos with original quality';
+    this.githubAria = 'GitHub — See my projects';
+    this.linkedinAria = 'LinkedIn — Follow my career';
+    this.flickrAria = 'Flickr — See my photos with original quality';
+  }
+
+  private translateAbout() {
+    if (this.lang === 'en') {
+      this.resetAboutCopy();
+      return;
+    }
+    if (this.translatingAbout) return;
+    this.translatingAbout = true;
+
+    const en = {
+      title: 'About me',
+      p1: `My name is Vitor, I'm ${this.myAge} year's old.`,
+      p2: 'I like to ride my bike, listen to alternative music, watch documentaries and drink orange juice.',
+      p3: 'My passion is development. Optimize processes and shortening paths is an art that programming makes possible.',
+      p4Lead: 'So in recent years I have developed my skills in logic, typescript and cloud computing. Acting as Fullstack Angular/Node, currently as Senior Software Engineer at ',
+      githubSub: 'See my projects',
+      linkedinSub: 'Follow my career',
+      flickrSub: 'See my photos with original quality',
+      githubAria: 'GitHub — See my projects',
+      linkedinAria: 'LinkedIn — Follow my career',
+      flickrAria: 'Flickr — See my photos with original quality',
+    };
+
+    forkJoin([
+      this.translateService.translate(en.title, 'en', this.lang),
+      this.translateService.translate(en.p1, 'en', this.lang),
+      this.translateService.translate(en.p2, 'en', this.lang),
+      this.translateService.translate(en.p3, 'en', this.lang),
+      this.translateService.translate(en.p4Lead, 'en', this.lang),
+      this.translateService.translate(en.githubSub, 'en', this.lang),
+      this.translateService.translate(en.linkedinSub, 'en', this.lang),
+      this.translateService.translate(en.flickrSub, 'en', this.lang),
+      this.translateService.translate(en.githubAria, 'en', this.lang),
+      this.translateService.translate(en.linkedinAria, 'en', this.lang),
+      this.translateService.translate(en.flickrAria, 'en', this.lang),
+    ]).subscribe({
+      next: ([title, p1, p2, p3, p4Lead, githubSub, linkedinSub, flickrSub, githubAria, linkedinAria, flickrAria]) => {
+        this.aboutTitle = title;
+        this.aboutP1 = p1;
+        this.aboutP2 = p2;
+        this.aboutP3 = p3;
+        this.aboutP4Lead = p4Lead;
+        this.githubSub = githubSub;
+        this.linkedinSub = linkedinSub;
+        this.flickrSub = flickrSub;
+        this.githubAria = githubAria;
+        this.linkedinAria = linkedinAria;
+        this.flickrAria = flickrAria;
+        this.translatingAbout = false;
+      },
+      error: () => {
+        this.translatingAbout = false;
+      },
+    });
   }
 
   private applyBackground() {
