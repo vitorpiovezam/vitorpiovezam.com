@@ -414,13 +414,14 @@
 
   .social-tooltip {
     position: absolute;
-    left: 50%;
+    left: 0;
+    right: auto;
     top: calc(100% + 10px);
     bottom: auto;
-    transform: translateX(-50%);
+    transform: translateY(0);
     z-index: 20;
     min-width: 140px;
-    max-width: 220px;
+    max-width: min(220px, 70vw);
     padding: 8px 10px;
     border: 1px solid $rule;
     border-radius: 4px;
@@ -430,7 +431,7 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
-    text-align: center;
+    text-align: left;
     white-space: normal;
   }
 
@@ -438,28 +439,13 @@
   .social-link:focus-visible .social-tooltip {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(2px);
-  }
-
-  .social-link:first-child .social-tooltip {
-    left: 0;
-    text-align: left;
-  }
-
-  .social-link:first-child:hover .social-tooltip,
-  .social-link:first-child:focus-visible .social-tooltip {
     transform: translateY(2px);
   }
 
   .social-link:last-child .social-tooltip {
     left: auto;
     right: 0;
-    text-align: left;
-  }
-
-  .social-link:last-child:hover .social-tooltip,
-  .social-link:last-child:focus-visible .social-tooltip {
-    transform: translateY(2px);
+    text-align: right;
   }
 
   .about-right {

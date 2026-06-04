@@ -140,7 +140,19 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     margin: 2rem auto;
     max-width: 100%;
+    border: none;
     border-radius: 6px;
+  }
+
+  iframe[src*="strava-embeds.com"] {
+    width: min(590px, 100%);
+    height: 405px;
+    margin: 1.5rem auto 0.5rem;
+  }
+
+  p:has(iframe[src*="strava-embeds.com"]) {
+    text-align: center;
+    margin-bottom: 1.5rem;
   }
 
   .blog-audio-player {
