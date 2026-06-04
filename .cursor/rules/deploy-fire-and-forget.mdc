@@ -1,0 +1,13 @@
+---
+description: Deploy commands run in background without waiting for completion
+alwaysApply: true
+---
+
+# Deploy — fire and forget
+
+When deploying (`npm run deploy`, `make deploy`, `serverless deploy`, `aws s3 sync`, CloudFront invalidation):
+
+1. Run the command with `block_until_ms: 0` (background) — do not `Await` or poll the terminal unless the user explicitly asks for deploy status.
+2. Tell the user the deploy was **started**, not that it finished.
+3. For API deploys in `blog-cms-v2`, always run `make package` before `npx serverless@3 deploy --aws-profile thali` so posts are bundled into the zip.
+4. Do not change files as part of a deploy-only request unless the user asked for code changes too.

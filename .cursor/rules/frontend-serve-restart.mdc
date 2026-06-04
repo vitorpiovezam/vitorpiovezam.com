@@ -1,0 +1,16 @@
+---
+description: Restart Angular dev server after frontend changes
+globs: vitorpiovezam.com/**/*
+alwaysApply: false
+---
+
+# Frontend dev server (`vitorpiovezam.com`)
+
+When starting or restarting the local frontend after editing files under `vitorpiovezam.com/`:
+
+1. **Stop** any running `ng serve` / `npm start` on port 4200 first:
+   - `pkill -f "ng serve"` or kill the PID bound to `:4200`
+2. **Start** fresh: `cd vitorpiovezam.com && npm start` (or `npm run start:dev`) in the background (`block_until_ms: 0`).
+3. Do not wait for compile output unless the user asks to verify the server is up.
+
+API local (if needed): `cd blog-cms-v2 && make serve` on port 3000 — separate process, same fire-and-forget pattern.
